@@ -1,9 +1,11 @@
 import './globals.css';
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Inter, Poppins } from 'next/font/google';
 import TopHeadPage from '@/TopHead';
+import { Providers } from './providers';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
-const inter = Inter({ subsets: ['latin'] });
+const poppins = Poppins({ subsets: ['latin'], weight: '400' });
 
 export const metadata: Metadata = {
   title: 'Putaxa - Art Toys',
@@ -17,11 +19,19 @@ export default function RootLayout({
 }) {
   return (
     <html lang='en'>
+      <head>
+        <link
+          rel='icon'
+          href='/assets/header/logoMetadata.png'
+        />
+      </head>
       <body
-        className={inter.className}
+        className={poppins.className}
         suppressHydrationWarning>
-        <TopHeadPage />
-        {children}
+        <Providers>
+          <TopHeadPage />
+          <div className='pt-28'>{children}</div>
+        </Providers>
       </body>
     </html>
   );
