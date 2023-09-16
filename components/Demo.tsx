@@ -20,7 +20,7 @@ import {
 } from '@nextui-org/react';
 import { useState } from 'react';
 import Link from 'next/link';
-export default function TopHeadPage() {
+export default function Demo() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   return (
     <Navbar
@@ -97,23 +97,12 @@ export default function TopHeadPage() {
             About
           </Link>
         </NavbarMenuItem>
-        <NavbarMenuItem className='hover:text-default-red hover:bg-stone-100 rounded p-4 block sm:hidden '>
-          <Link
-            href={'#'}
-            className=''>
-            Tài khoản
-          </Link>
-        </NavbarMenuItem>
         <NavbarMenuItem className='hover:text-default-red hover:bg-stone-100 rounded p-4'>
           <Link
             href='#'
             className='block'>
             Socials
           </Link>
-        </NavbarMenuItem>
-        <NavbarMenuItem className='px-4 flex gap-4'>
-          <i className='bi bi-facebook text-xl'></i>
-          <i className='bi bi-instagram text-xl'></i>
         </NavbarMenuItem>
       </NavbarMenu>
 
@@ -135,7 +124,7 @@ export default function TopHeadPage() {
               priority
               width={200}
               height={0}
-              className='sm:w-48 w-40 h-auto object-cover'
+              className='w-48 h-auto object-cover'
             />
           </Link>
         </Tooltip>
@@ -143,7 +132,7 @@ export default function TopHeadPage() {
 
       {/* RightSide */}
       <NavbarContent
-        className='flex sm:gap-4 gap-1'
+        className='flex sm:gap-4 gap-2'
         justify='end'>
         {/* Search */}
         <Popover
@@ -183,7 +172,6 @@ export default function TopHeadPage() {
           content='Tài khoản'
           color='danger'>
           <Button
-            className='sm:block hidden'
             color='default'
             variant='light'
             isIconOnly>
