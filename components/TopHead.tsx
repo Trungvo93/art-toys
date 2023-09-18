@@ -20,8 +20,11 @@ import {
 } from '@nextui-org/react';
 import { useState } from 'react';
 import Link from 'next/link';
+import LoginWithNumberPhonePage from './LoginWithNumberPhone';
 export default function TopHeadPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
+
   return (
     <Navbar
       isMenuOpen={isMenuOpen}
@@ -177,22 +180,45 @@ export default function TopHeadPage() {
         </Popover>
 
         {/* User */}
-        <Tooltip
-          showArrow
+        <Popover
+          isOpen={isLoginOpen}
+          onOpenChange={setIsLoginOpen}
           placement='bottom'
-          content='Tài khoản'
-          color='danger'>
-          <Button
-            className='sm:block hidden'
-            color='default'
-            variant='light'
-            isIconOnly>
-            <i className='bi bi-person text-2xl'></i>
-          </Button>
-        </Tooltip>
+          showArrow={true}>
+          <PopoverTrigger>
+            <Button
+              className='sm:block hidden'
+              color='default'
+              variant='light'
+              isIconOnly>
+              <i className='bi bi-person text-2xl'></i>
+            </Button>
+          </PopoverTrigger>
+
+          <PopoverContent>
+            <div className='px-1 py-2  flex flex-col gap-4 '>
+              <p className='text-center text-xl font-medium py-4'>
+                ĐĂNG NHẬP TÀI KHOẢN
+              </p>
+              <LoginWithNumberPhonePage />
+              <div>
+                <p className='text-center'>
+                  Khách hàng mới?{' '}
+                  <Link
+                    href={'/register'}
+                    className='text-red-600'
+                    onClick={() => {
+                      setIsLoginOpen(false);
+                    }}>
+                    Tạo tài khoản
+                  </Link>
+                </p>
+              </div>
+            </div>
+          </PopoverContent>
+        </Popover>
 
         {/* Cart */}
-
         <Popover
           placement='bottom'
           showArrow={true}>
