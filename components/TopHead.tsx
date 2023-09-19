@@ -21,6 +21,7 @@ import {
 import { useState } from 'react';
 import Link from 'next/link';
 import LoginWithNumberPhonePage from './LoginWithNumberPhone';
+import LoginWithEmailPage from './LoginWithEmail';
 export default function TopHeadPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
@@ -200,7 +201,7 @@ export default function TopHeadPage() {
               <p className='text-center text-xl font-medium py-4'>
                 ĐĂNG NHẬP TÀI KHOẢN
               </p>
-              <LoginWithNumberPhonePage />
+              <LoginWithEmailPage />
               <div>
                 <p className='text-center'>
                   Khách hàng mới?{' '}

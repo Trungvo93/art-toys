@@ -4,7 +4,6 @@ import { Inter, Poppins } from 'next/font/google';
 import TopHeadPage from '@/TopHead';
 import { Providers } from './providers';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import Demo from '@/Demo';
 
 const poppins = Poppins({ subsets: ['latin'], weight: '400' });
 
