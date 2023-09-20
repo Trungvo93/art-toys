@@ -110,7 +110,7 @@ export default function RegisterPage() {
   const handleCheckLogin = () => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        console.log('user already logged: ', user.email);
+        console.log('user already logged: ', user);
       } else {
         console.log('user not logged');
       }
@@ -121,102 +121,104 @@ export default function RegisterPage() {
     handleCheckLogin();
   };
   return (
-    <div className='flex flex-col gap-4 justify-center items-center mt-12 sm:w-[500px] w-[250px] m-auto'>
-      <h1 className=' text-xl text-default-red'>Đăng ký tài khoản</h1>
-      <p className='text-sm'>Hãy điền đầy đủ thông tin dưới đây:</p>
-      <Input
-        value={fullName}
-        onValueChange={setFullName}
-        isInvalid={isInvalidFullName}
-        errorMessage={isInvalidFullName && 'Họ và tên không được để trống'}
-        color={isInvalidFullName ? 'danger' : 'default'}
-        label='Họ và tên'
-        type='text'
-        className='w-full'
-      />
-      <Input
-        value={email}
-        onValueChange={setEmail}
-        isInvalid={isInvalidEmail}
-        errorMessage={isInvalidEmail && 'Email không đúng định dạng'}
-        color={isInvalidEmail ? 'danger' : 'default'}
-        label='Email'
-        type='email'
-        className='w-full'
-      />
+    <div className='px-4'>
+      <div className='flex flex-col gap-4 justify-center items-center mt-12 sm:w-[600px] w-full m-auto '>
+        <h1 className=' text-xl text-default-red'>Đăng ký tài khoản</h1>
+        <p className='text-sm'>Hãy điền đầy đủ thông tin dưới đây:</p>
+        <Input
+          value={fullName}
+          onValueChange={setFullName}
+          isInvalid={isInvalidFullName}
+          errorMessage={isInvalidFullName && 'Họ và tên không được để trống'}
+          color={isInvalidFullName ? 'danger' : 'default'}
+          label='Họ và tên'
+          type='text'
+          className='w-full'
+        />
+        <Input
+          value={email}
+          onValueChange={setEmail}
+          isInvalid={isInvalidEmail}
+          errorMessage={isInvalidEmail && 'Email không đúng định dạng'}
+          color={isInvalidEmail ? 'danger' : 'default'}
+          label='Email'
+          type='email'
+          className='w-full'
+        />
 
-      <Input
-        className='w-full'
-        label='Mật khẩu'
-        endContent={
-          <button
-            className='focus:outline-none'
-            type='button'
-            onClick={toggleVisibilityPassword}>
-            {showPassword ? (
-              <i className='bi bi-eye-slash text-xl'></i>
-            ) : (
-              <i className='bi bi-eye text-xl'></i>
-            )}
-          </button>
-        }
-        type={showPassword ? 'text' : 'password'}
-        value={password}
-        onValueChange={setPassword}
-        isInvalid={isInvalidPassword}
-        errorMessage={isInvalidPassword && 'Mật khẩu không được để trống'}
-        color={isInvalidPassword ? 'danger' : 'default'}
-      />
+        <Input
+          className='w-full'
+          label='Mật khẩu'
+          endContent={
+            <button
+              className='focus:outline-none'
+              type='button'
+              onClick={toggleVisibilityPassword}>
+              {showPassword ? (
+                <i className='bi bi-eye-slash text-xl'></i>
+              ) : (
+                <i className='bi bi-eye text-xl'></i>
+              )}
+            </button>
+          }
+          type={showPassword ? 'text' : 'password'}
+          value={password}
+          onValueChange={setPassword}
+          isInvalid={isInvalidPassword}
+          errorMessage={isInvalidPassword && 'Mật khẩu không được để trống'}
+          color={isInvalidPassword ? 'danger' : 'default'}
+        />
 
-      <Input
-        className='w-full'
-        label='Nhập lại mật khẩu'
-        endContent={
-          <button
-            className='focus:outline-none'
-            type='button'
-            onClick={toggleVisibilityRePassword}>
-            {showRePassword ? (
-              <i className='bi bi-eye-slash text-xl'></i>
-            ) : (
-              <i className='bi bi-eye text-xl'></i>
-            )}
-          </button>
-        }
-        type={showRePassword ? 'text' : 'password'}
-        value={rePassword}
-        onValueChange={setRePassword}
-        isInvalid={isInvalidRePassword}
-        errorMessage={
-          isInvalidRePassword && 'Mật khẩu nhập lại không trùng khớp'
-        }
-        color={isInvalidRePassword ? 'danger' : 'default'}
-      />
-      <Button
-        className='w-full '
-        color='danger'
-        onClick={() => {
-          handleSubmit();
-        }}>
-        Đăng ký
-      </Button>
-      <Button
-        className='w-full '
-        color='danger'
-        onClick={() => {
-          handleCheckLogin();
-        }}>
-        Kiểm tra login
-      </Button>
+        <Input
+          className='w-full'
+          label='Nhập lại mật khẩu'
+          endContent={
+            <button
+              className='focus:outline-none'
+              type='button'
+              onClick={toggleVisibilityRePassword}>
+              {showRePassword ? (
+                <i className='bi bi-eye-slash text-xl'></i>
+              ) : (
+                <i className='bi bi-eye text-xl'></i>
+              )}
+            </button>
+          }
+          type={showRePassword ? 'text' : 'password'}
+          value={rePassword}
+          onValueChange={setRePassword}
+          isInvalid={isInvalidRePassword}
+          errorMessage={
+            isInvalidRePassword && 'Mật khẩu nhập lại không trùng khớp'
+          }
+          color={isInvalidRePassword ? 'danger' : 'default'}
+        />
+        <Button
+          className='w-full '
+          color='danger'
+          onClick={() => {
+            handleSubmit();
+          }}>
+          Đăng ký
+        </Button>
+        <Button
+          className='w-full '
+          color='danger'
+          onClick={() => {
+            handleCheckLogin();
+          }}>
+          Kiểm tra login
+        </Button>
 
-      <Button
-        className='w-full '
-        color='danger'
-        onClick={() => {
-          handleSignOut();
-        }}>
-        Logout
-      </Button>
+        <Button
+          className='w-full '
+          color='danger'
+          onClick={() => {
+            handleSignOut();
+          }}>
+          Logout
+        </Button>
+      </div>
     </div>
   );
 }
