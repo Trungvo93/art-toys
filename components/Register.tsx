@@ -4,11 +4,13 @@ import { useMemo, useState, useEffect } from 'react';
 import { auth } from '../firebase/firebaseConfig';
 import {
   createUserWithEmailAndPassword,
+  updateProfile,
   onAuthStateChanged,
   signOut,
 } from 'firebase/auth';
 export default function RegisterPage() {
   const [fullName, setFullName] = useState<string>('');
+  const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [rePassword, setRePassword] = useState<string>('');
@@ -21,6 +23,7 @@ export default function RegisterPage() {
 
   const [ignoreFistCheck, setIgnoreFistCheck] = useState(false);
   const [isInvalidFullName, setIsInvalidFullName] = useState(false);
+  const [isInvalidPhoneNumber, setIsInvalidPhoneNumber] = useState(false);
   const [isInvalidEmail, setIsInvalidEmail] = useState(false);
   const [isInvalidPassword, setIsInvalidPassword] = useState(false);
   const [isInvalidRePassword, setIsInvalidRePassword] = useState(false);
@@ -37,6 +40,18 @@ export default function RegisterPage() {
       setIsInvalidFullName(true);
     }
   }, [fullName]);
+
+  //Validate Number Phone
+  const validatePhone = (value: string) =>
+    value.match(/(84|0[3|5|7|8|9])+([0-9]{8})\b/g);
+  useMemo(() => {
+    if (ignoreFistCheck == false) {
+      setIsInvalidPhoneNumber(false);
+    } else {
+      const result = validatePhone(phoneNumber) ? false : true;
+      setIsInvalidPhoneNumber(result);
+    }
+  }, [phoneNumber]);
 
   //validate Email
   const validateEmail = (value: string) =>
@@ -87,20 +102,29 @@ export default function RegisterPage() {
     }
     if (
       isInvalidFullName == false &&
+      isInvalidPhoneNumber == false &&
       isInvalidEmail == false &&
       isInvalidPassword == false &&
       fullName.length > 0 &&
+      phoneNumber.length > 0 &&
       email.length > 0 &&
       password.length > 0 &&
       rePassword === password
     ) {
-      console.log('Full name: ', fullName);
-      console.log('Email: ', email);
-      console.log('Password: ', password);
       createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           const user = userCredential.user;
-          console.log(user);
+          updateProfile(user, { displayName: fullName })
+            .then(() => {
+              // Profile updated!
+              // ...
+              console.log('Register successful');
+            })
+            .catch((error) => {
+              console.log('Error add Full Name: ', error);
+              // An error occurred
+              // ...
+            });
         })
         .catch((error) => {
           console.log('Error creating user: ', error);
@@ -132,6 +156,18 @@ export default function RegisterPage() {
           errorMessage={isInvalidFullName && 'Họ và tên không được để trống'}
           color={isInvalidFullName ? 'danger' : 'default'}
           label='Họ và tên'
+          type='text'
+          className='w-full'
+        />
+        <Input
+          value={phoneNumber}
+          onValueChange={setPhoneNumber}
+          isInvalid={isInvalidPhoneNumber}
+          errorMessage={
+            isInvalidPhoneNumber && 'Số điện thoại không đúng định dạng'
+          }
+          color={isInvalidPhoneNumber ? 'danger' : 'default'}
+          label='Số điện thoại'
           type='text'
           className='w-full'
         />
