@@ -1,16 +1,18 @@
 'use client';
 import { Button, Input } from '@nextui-org/react';
-import { useMemo, useState, useEffect } from 'react';
-import { auth } from '../firebase/firebaseConfig';
+import { useMemo, useState, useEffect, useContext } from 'react';
+import { auth } from '../../firebase/firebaseConfig';
 import { signInWithEmailAndPassword } from 'firebase/auth';
+import { AppContext } from '@/context/contextConfig';
 export default function LoginWithEmailPage() {
+  const { state, dispatch } = useContext(AppContext);
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isInvalidEmail, setIsInvalidEmail] = useState(false);
   const [isInvalidPassword, setIsInvalidPassword] = useState<boolean>(false);
   const [ignoreFistCheck, setIgnoreFistCheck] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(false);
   const toggleVisibility = () => setShowPassword(!showPassword);
   useEffect(() => {
     setIgnoreFistCheck(true);
@@ -48,15 +50,15 @@ export default function LoginWithEmailPage() {
       isInvalidPassword == false &&
       password.length > 0
     ) {
-      console.log('Email: ', email);
-      console.log('Password: ', password);
+      setIsLoading(true);
       signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           const user = userCredential.user;
-          console.log(user);
+          dispatch({ type: 'LOGIN_SUCCESS', payload: user });
         })
         .catch((error) => {
-          console.log('loggin error: ', error);
+          console.log('login error: ', error);
+          setIsLoading(false);
         });
     }
   };
@@ -111,6 +113,7 @@ export default function LoginWithEmailPage() {
         color={isInvalidPassword ? 'danger' : 'default'}
       />
       <Button
+        isLoading={isLoading}
         id='sign-in-button'
         color='danger'
         onClick={handleSubmit}>

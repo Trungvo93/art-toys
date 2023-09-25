@@ -1,10 +1,10 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import { Inter, Poppins } from 'next/font/google';
-import TopHeadPage from '@/TopHead';
+import TopHeadPage from '@/components/TopHead';
 import { Providers } from './providers';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-
+import { AppContextProvider } from '@/context/contextConfig';
 const poppins = Poppins({ subsets: ['latin'], weight: '400' });
 
 export const metadata: Metadata = {
@@ -29,8 +29,10 @@ export default function RootLayout({
         className={poppins.className}
         suppressHydrationWarning>
         <Providers>
-          <TopHeadPage />
-          <div className=''>{children}</div>
+          <AppContextProvider>
+            <TopHeadPage />
+            <div className=''>{children}</div>
+          </AppContextProvider>
         </Providers>
       </body>
     </html>

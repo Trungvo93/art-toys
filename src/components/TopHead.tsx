@@ -18,28 +18,23 @@ import {
   Accordion,
   AccordionItem,
 } from '@nextui-org/react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import Link from 'next/link';
 import LoginWithNumberPhonePage from './LoginWithNumberPhone';
 import LoginWithEmailPage from './LoginWithEmail';
-import { auth } from '../firebase/firebaseConfig';
+import { auth } from '../../firebase/firebaseConfig';
 import { onAuthStateChanged } from 'firebase/auth';
 import ButtonProfilePage from './ButtonProfile';
+import { AppContext } from '@/context/contextConfig';
 export default function TopHeadPage() {
-  interface Profile {
-    [key: string]: any;
-  }
+  const { state, dispatch } = useContext(AppContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
-  const [user, setUser] = useState<Profile>();
   useEffect(() => {
     onAuthStateChanged(auth, (account) => {
       if (account) {
-        setUser({ ...account });
-        console.log(account);
+        dispatch({ type: 'LOGIN_SUCCESS', payload: account });
       } else {
-        setUser(undefined);
-        console.log('user not logged');
       }
     });
   }, []);
@@ -198,8 +193,8 @@ export default function TopHeadPage() {
         </Popover>
 
         {/* User */}
-        {user ? (
-          <ButtonProfilePage userProfile={user} />
+        {state.userProfile !== undefined ? (
+          <ButtonProfilePage />
         ) : (
           <Popover
             isOpen={isLoginOpen}
