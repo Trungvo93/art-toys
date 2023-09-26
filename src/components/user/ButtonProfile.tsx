@@ -8,7 +8,7 @@ import {
   Divider,
 } from '@nextui-org/react';
 import Link from 'next/link';
-import { auth } from '../../firebase/firebaseConfig';
+import { auth } from '../../../firebase/firebaseConfig';
 import { signOut } from 'firebase/auth';
 import { useState, useContext } from 'react';
 import { AppContext } from '@/context/contextConfig';

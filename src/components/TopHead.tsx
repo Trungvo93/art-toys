@@ -20,11 +20,11 @@ import {
 } from '@nextui-org/react';
 import { useState, useEffect, useContext } from 'react';
 import Link from 'next/link';
-import LoginWithNumberPhonePage from './LoginWithNumberPhone';
-import LoginWithEmailPage from './LoginWithEmail';
+import LoginWithNumberPhonePage from './user/LoginWithNumberPhone';
+import LoginWithEmailPage from './user/LoginWithEmail';
 import { auth } from '../../firebase/firebaseConfig';
 import { onAuthStateChanged } from 'firebase/auth';
-import ButtonProfilePage from './ButtonProfile';
+import ButtonProfilePage from './user/ButtonProfile';
 import { AppContext } from '@/context/contextConfig';
 export default function TopHeadPage() {
   const { state, dispatch } = useContext(AppContext);

@@ -1,5 +1,5 @@
 'use client';
-import { auth } from '../../firebase/firebaseConfig';
+import { auth } from '../../../firebase/firebaseConfig';
 import { updateProfile, onAuthStateChanged } from 'firebase/auth';
 import { useEffect, useState, useContext } from 'react';
 import { Button, Spinner } from '@nextui-org/react';
@@ -70,9 +70,7 @@ export default function UserProfilePage() {
           <div>
             <Button
               color='danger'
-              onClick={() => {
-                handleUpdateProfile();
-              }}>
+              onClick={() => {}}>
               Sửa thông tin
             </Button>
           </div>

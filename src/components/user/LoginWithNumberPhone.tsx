@@ -1,7 +1,7 @@
 'use client';
 import { Button, Input } from '@nextui-org/react';
 import { useMemo, useState } from 'react';
-import { auth } from '../../firebase/firebaseConfig';
+import { auth } from '../../../firebase/firebaseConfig';
 
 export default function LoginWithNumberPhonePage() {
   const [email, setEmail] = useState<string>('');
