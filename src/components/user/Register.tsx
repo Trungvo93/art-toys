@@ -125,7 +125,6 @@ export default function RegisterPage() {
           updateProfile(user, { displayName: fullName })
             .then(() => {
               // Profile updated!
-              // ...
               dispatch({ type: 'USER_UPDATE_SUCCESS', payload: user });
             })
             .catch((error) => {

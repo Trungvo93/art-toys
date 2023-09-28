@@ -1,19 +1,26 @@
 'use client';
 import { auth } from '../../../firebase/firebaseConfig';
-import { updateProfile, onAuthStateChanged } from 'firebase/auth';
+import { updateProfile } from 'firebase/auth';
 import { useEffect, useState, useContext } from 'react';
 import { Button, Spinner } from '@nextui-org/react';
 import { AppContext } from '@/context/contextConfig';
 import { useRouter } from 'next/navigation';
+import EditProfilePage from './EditProfile';
 export default function UserProfilePage() {
   const { state, dispatch } = useContext(AppContext);
   const [firstLoad, setFirstLoad] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
   const router = useRouter();
   useEffect(() => {
     setTimeout(() => {
       setFirstLoad(true);
     }, 2000);
   }, []);
+  useEffect(() => {
+    if (state.userProfile === undefined) {
+      setIsEdit(false);
+    }
+  }, [state.userProfile]);
   const handleUpdateProfile = () => {
     const profile = auth.currentUser;
 
@@ -29,6 +36,9 @@ export default function UserProfilePage() {
   };
   const handleGotoHomePage = () => {
     router.push('/');
+  };
+  const handleEdit = () => {
+    setIsEdit(!isEdit);
   };
   if (state.userProfile === undefined) {
     if (firstLoad === true) {
@@ -57,24 +67,36 @@ export default function UserProfilePage() {
   } else {
     return (
       <div className='px-4'>
-        <div className='flex flex-col gap-4  mt-12 sm:w-[600px] w-full m-auto '>
-          <h1 className='text-xl text-default-red text-center'>
-            Thông tin tài khoản
-          </h1>
-          <div className=''>ID: {state.userProfile?.uid}</div>
-          <div className=''>Tên hiển thị: {state.userProfile?.displayName}</div>
-          <div className=''>Email: {state.userProfile?.email}</div>
-          <div className=''>
-            Số điện thoại: {state.userProfile?.phoneNumber}
+        {isEdit ? (
+          <EditProfilePage toggleFunction={handleEdit} />
+        ) : (
+          <div className='flex flex-col gap-4  mt-12 sm:w-[600px] w-full m-auto '>
+            <h1 className='text-xl text-default-red text-center'>
+              Thông tin tài khoản
+            </h1>
+            <div className=''>ID: {state.userProfile?.uid}</div>
+            <div className=''>
+              Tên hiển thị: {state.userProfile?.displayName}
+            </div>
+            <div className=''>Email: {state.userProfile?.email}</div>
+
+            <div className='flex flex-col sm:flex-row gap-4'>
+              <Button
+                color='danger'
+                onClick={() => {
+                  handleEdit();
+                }}>
+                Sửa thông tin
+              </Button>
+              <Button
+                color='secondary'
+                variant='ghost'
+                onClick={() => {}}>
+                Thay đổi mật khẩu
+              </Button>
+            </div>
           </div>
-          <div>
-            <Button
-              color='danger'
-              onClick={() => {}}>
-              Sửa thông tin
-            </Button>
-          </div>
-        </div>
+        )}
       </div>
     );
   }
