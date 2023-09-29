@@ -2,10 +2,21 @@
 import { auth } from '../../../firebase/firebaseConfig';
 import { updateProfile } from 'firebase/auth';
 import { useEffect, useState, useContext } from 'react';
-import { Button, Spinner } from '@nextui-org/react';
+import {
+  Button,
+  Spinner,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
+} from '@nextui-org/react';
 import { AppContext } from '@/context/contextConfig';
 import { useRouter } from 'next/navigation';
 import EditProfilePage from './EditProfile';
+import ChangePasswordPage from './ChangePassword';
+import ChangeAvatarPage from './ChangeAvatar';
 export default function UserProfilePage() {
   const { state, dispatch } = useContext(AppContext);
   const [firstLoad, setFirstLoad] = useState(false);
@@ -74,6 +85,7 @@ export default function UserProfilePage() {
             <h1 className='text-xl text-default-red text-center'>
               Thông tin tài khoản
             </h1>
+            <ChangeAvatarPage />
             <div className=''>ID: {state.userProfile?.uid}</div>
             <div className=''>
               Tên hiển thị: {state.userProfile?.displayName}
@@ -88,12 +100,7 @@ export default function UserProfilePage() {
                 }}>
                 Sửa thông tin
               </Button>
-              <Button
-                color='secondary'
-                variant='ghost'
-                onClick={() => {}}>
-                Thay đổi mật khẩu
-              </Button>
+              <ChangePasswordPage />
             </div>
           </div>
         )}

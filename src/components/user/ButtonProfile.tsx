@@ -42,6 +42,7 @@ export default function ButtonProfilePage() {
               color={
                 state.userProfile?.photoURL !== null ? 'primary' : 'default'
               }
+              name={state.userProfile?.displayName.charAt(0).toUpperCase()}
               className='transition-transform w-6 h-6 '
               src=''
             />
