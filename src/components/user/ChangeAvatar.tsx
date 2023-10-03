@@ -1,9 +1,24 @@
 'use client';
 import { Avatar, Button } from '@nextui-org/react';
 import { AppContext } from '@/context/contextConfig';
-import { useState, useContext } from 'react';
+import { useState, useContext, SyntheticEvent, ChangeEvent } from 'react';
 export default function ChangeAvatarPage() {
   const { state, dispatch } = useContext(AppContext);
+  const [previewAvatar, setPreviewAvatar] = useState('');
+  const handleChangeImage = (e: ChangeEvent<HTMLInputElement>) => {
+    // const target = e.target as HTMLInputElement;
+    // const file: File = (target.files as FileList)[0];
+    const file =
+      e.target.files && e.target.files.length > 0 ? e.target.files[0] : null;
+
+    if (file !== null) {
+      setPreviewAvatar(URL.createObjectURL(file));
+      URL.revokeObjectURL(URL.createObjectURL(file));
+    }
+  };
+  const handleCancelUploadAvatar = () => {
+    setPreviewAvatar('');
+  };
   return (
     <div className='flex gap-4 items-center'>
       <Avatar
@@ -11,19 +26,33 @@ export default function ChangeAvatarPage() {
         color={state.userProfile?.photoURL !== null ? 'primary' : 'default'}
         name={state.userProfile?.displayName.charAt(0).toUpperCase()}
         className='transition-transform  text-large'
-        src={state.userProfile?.photoURL}
+        src={
+          previewAvatar.length > 0 ? previewAvatar : state.userProfile?.photoURL
+        }
         size='lg'
       />
       <input
         type='file'
-        className='text-sm text-gray-500
-      file:mr-4 file:py-2 file:px-4
-      file:rounded-md file:border-0
-      file:text-sm file:font-semibold
-      file:bg-blue-500 file:text-white
-      hover:file:bg-blue-600
-    '
+        accept='image/*'
+        className='hidden'
+        id='uploadFile'
+        onChange={(e) => {
+          handleChangeImage(e);
+        }}
       />
+      <Button
+        onClick={() => {
+          document.getElementById('uploadFile')?.click();
+        }}>
+        Tải hình lên
+      </Button>
+      <Button
+        onClick={() => {
+          handleCancelUploadAvatar();
+          setPreviewAvatar('');
+        }}>
+        Không lưu
+      </Button>
     </div>
   );
 }
