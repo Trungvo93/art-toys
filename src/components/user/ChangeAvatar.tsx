@@ -11,7 +11,7 @@ import {
 import { storage, auth } from '../../../firebase/firebaseConfig';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { updateProfile } from 'firebase/auth';
-
+import { uuid } from 'uuidv4';
 interface Avatar {
   name: string;
   previewBlob: string;
@@ -41,7 +41,7 @@ export default function ChangeAvatarPage() {
   };
   const handleSubmit = () => {
     if (avatar) {
-      const storageRef = ref(storage, 'avatar/' + avatar?.name);
+      const storageRef = ref(storage, 'avatar/' + uuid + avatar?.name);
       const uploadTask = uploadBytesResumable(storageRef, avatar?.fileAvatar);
       uploadTask.on(
         'state_changed',
