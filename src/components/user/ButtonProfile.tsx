@@ -43,8 +43,8 @@ export default function ButtonProfilePage() {
                 state.userProfile?.photoURL !== null ? 'primary' : 'default'
               }
               name={state.userProfile?.displayName.charAt(0).toUpperCase()}
+              src={state.userProfile?.photoURL}
               className='transition-transform w-6 h-6 '
-              src=''
             />
           </Button>
         </PopoverTrigger>
