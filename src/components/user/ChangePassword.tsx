@@ -123,7 +123,8 @@ export default function ChangePasswordPage() {
         variant='ghost'
         onClick={() => {
           onOpen();
-        }}>
+        }}
+        className='w-full sm:w-auto'>
         Thay đổi mật khẩu
       </Button>
       <Modal

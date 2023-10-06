@@ -97,7 +97,8 @@ export default function UserProfilePage() {
                 color='danger'
                 onClick={() => {
                   handleEdit();
-                }}>
+                }}
+                className='w-full sm:w-auto'>
                 Sửa thông tin
               </Button>
               <ChangePasswordPage />

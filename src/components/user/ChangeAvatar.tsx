@@ -11,7 +11,7 @@ import {
 import { storage, auth } from '../../../firebase/firebaseConfig';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { updateProfile } from 'firebase/auth';
-import { uuid } from 'uuidv4';
+import { v4 as uuidv4 } from 'uuid';
 interface Avatar {
   name: string;
   previewBlob: string;
@@ -41,7 +41,10 @@ export default function ChangeAvatarPage() {
   };
   const handleSubmit = () => {
     if (avatar) {
-      const storageRef = ref(storage, 'avatar/' + uuid + avatar?.name);
+      const storageRef = ref(
+        storage,
+        'avatar/' + uuidv4() + '-' + avatar?.name
+      );
       const uploadTask = uploadBytesResumable(storageRef, avatar?.fileAvatar);
       uploadTask.on(
         'state_changed',
@@ -109,7 +112,7 @@ export default function ChangeAvatarPage() {
     setAvatar(undefined);
   };
   return (
-    <div className='flex gap-4 items-center'>
+    <div className='flex flex-col sm:flex-row gap-4 items-center'>
       <Avatar
         isBordered
         color={state.userProfile?.photoURL !== null ? 'primary' : 'default'}
@@ -131,14 +134,17 @@ export default function ChangeAvatarPage() {
       <Button
         onClick={() => {
           document.getElementById('uploadFile')?.click();
-        }}>
+        }}
+        className='w-full sm:w-auto'>
         Đổi đại diện
       </Button>
       {avatar ? (
         <Button
+          color='danger'
           onClick={() => {
             handleSubmit();
-          }}>
+          }}
+          className='w-full sm:w-auto'>
           Lưu
         </Button>
       ) : (
@@ -147,9 +153,12 @@ export default function ChangeAvatarPage() {
 
       {avatar ? (
         <Button
+          color='secondary'
+          variant='ghost'
           onClick={() => {
             handleCancel();
-          }}>
+          }}
+          className='w-full sm:w-auto'>
           Không lưu
         </Button>
       ) : (
