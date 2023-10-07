@@ -29,9 +29,9 @@ export default async function Page() {
   const data: Banner[] | null = await getData();
   return (
     <main>
-      {/* <Suspense fallback={<p>Loading feed...</p>}> */}
-      <BannerPage data={data} />
-      {/* </Suspense> */}
+      <Suspense fallback={<p>Loading feed...</p>}>
+        <BannerPage data={data} />
+      </Suspense>
     </main>
   );
 }
