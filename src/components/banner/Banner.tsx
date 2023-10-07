@@ -29,7 +29,7 @@ export default function BannerPage(props: { data: Banner[] | null }) {
   }, []);
   return (
     <div className='p-4'>
-      <Swiper
+      {/* <Swiper
         modules={[Navigation, Pagination, Autoplay]}
         spaceBetween={50}
         slidesPerView={1}
@@ -49,6 +49,30 @@ export default function BannerPage(props: { data: Banner[] | null }) {
         <SwiperSlide className='cursor-pointer'>
           <Image
             src={data ? data[1].src : ''}
+            alt='NextUI hero Image'
+          />
+        </SwiperSlide>
+      </Swiper> */}
+      <Swiper
+        modules={[Navigation, Pagination, Autoplay]}
+        spaceBetween={50}
+        slidesPerView={1}
+        navigation
+        pagination={{ clickable: true }}
+        autoplay={{ delay: 2500 }}>
+        <SwiperSlide
+          className='cursor-pointer'
+          onClick={() => {
+            console.log('click ne');
+          }}>
+          <Image
+            src={props.data ? props.data[0].src : ''}
+            alt='NextUI hero Image'
+          />
+        </SwiperSlide>
+        <SwiperSlide className='cursor-pointer'>
+          <Image
+            src={props.data ? props.data[1].src : ''}
             alt='NextUI hero Image'
           />
         </SwiperSlide>

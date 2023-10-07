@@ -1,6 +1,6 @@
 import BannerPage from '@/components/banner/Banner';
 import { database } from '../../firebase/firebaseConfig';
-import { ref, onValue } from 'firebase/database';
+import { ref, onValue, get } from 'firebase/database';
 type Banner = {
   id: string;
   src: string;
@@ -8,15 +8,18 @@ type Banner = {
 async function getData() {
   const bannerRef = ref(database, 'banner');
   let result: Banner[] | null = null;
-  onValue(bannerRef, (snapshot) => {
-    const data = snapshot.val();
-    if (!!data) {
-      result = data;
-    } else {
-      console.log('Data not found');
-      result = null;
-    }
-  });
+  await get(bannerRef)
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        console.log(snapshot.val());
+        result = snapshot.val();
+      } else {
+        console.log('No data available');
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+    });
   return result;
 }
 export default async function Page() {
