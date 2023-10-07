@@ -20,10 +20,7 @@ export default function BannerPage(props: { data: Banner[] }) {
         slidesPerView={1}
         navigation
         pagination={{ clickable: true }}
-        autoplay={{ delay: 2500 }}
-        // onSwiper={(swiper: any) => console.log(swiper)}
-        // onSlideChange={() => console.log('slide change')}
-      >
+        autoplay={{ delay: 2500 }}>
         <SwiperSlide
           className='cursor-pointer'
           onClick={() => {

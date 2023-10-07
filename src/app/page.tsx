@@ -20,5 +20,5 @@ async function getData() {
 }
 export default async function Page() {
   const data: Banner[] | null = await getData();
-  return <main>{data ? <BannerPage data={data} /> : ''}</main>;
+  return <main>{data ? <BannerPage data={data} /> : 'loading'}</main>;
 }
