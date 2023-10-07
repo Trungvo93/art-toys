@@ -8,17 +8,22 @@ type Banner = {
 async function getData() {
   const bannerRef = ref(database, 'banner');
   let result: Banner[] | null = null;
-  await onValue(bannerRef, (snapshot) => {
+  onValue(bannerRef, (snapshot) => {
     const data = snapshot.val();
     if (!!data) {
       result = data;
     } else {
       console.log('Data not found');
+      result = null;
     }
   });
   return result;
 }
 export default async function Page() {
   const data: Banner[] | null = await getData();
-  return <main>{data ? <BannerPage data={data} /> : 'loading'}</main>;
+  return (
+    <main>
+      <BannerPage data={data} />{' '}
+    </main>
+  );
 }

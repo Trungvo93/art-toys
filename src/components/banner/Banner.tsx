@@ -11,7 +11,7 @@ type Banner = {
   id: string;
   src: string;
 };
-export default function BannerPage(props: { data: Banner[] }) {
+export default function BannerPage(props: { data: Banner[] | null }) {
   return (
     <div className='p-4'>
       <Swiper
@@ -27,17 +27,23 @@ export default function BannerPage(props: { data: Banner[] }) {
             console.log('click ne');
           }}>
           <Image
-            src={props.data[0].src}
+            src={props.data ? props.data[0].src : ''}
             alt='NextUI hero Image'
           />
         </SwiperSlide>
         <SwiperSlide className='cursor-pointer'>
           <Image
-            src={props.data[1].src}
+            src={props.data ? props.data[1].src : ''}
             alt='NextUI hero Image'
           />
         </SwiperSlide>
       </Swiper>
+      <Button
+        onClick={() => {
+          console.log(props.data);
+        }}>
+        click
+      </Button>
     </div>
   );
 }
