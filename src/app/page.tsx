@@ -2,6 +2,7 @@ import BannerPage from '@/components/banner/Banner';
 import { database } from '../../firebase/firebaseConfig';
 import { ref, onValue, get } from 'firebase/database';
 import { Suspense } from 'react';
+import LoadingBanner from '@/components/banner/LoadingBanner';
 type Banner = {
   id: string;
   src: string;
@@ -29,7 +30,9 @@ export default async function Page() {
   const data: Banner[] | null = await getData();
   return (
     <main>
-      <BannerPage data={data} />
+      <Suspense fallback={<LoadingBanner />}>
+        <BannerPage data={data} />
+      </Suspense>
     </main>
   );
 }

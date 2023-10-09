@@ -9,7 +9,7 @@ type Action = {
   type: string;
 };
 const initialState: InitialStateType = {
-  userProfile: undefined,
+  userProfile: null,
 };
 const reducer = (state: any, action: Action) => {
   const { payload, type } = action;

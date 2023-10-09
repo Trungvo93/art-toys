@@ -35,6 +35,7 @@ export default function TopHeadPage() {
       if (account) {
         dispatch({ type: 'LOGIN_SUCCESS', payload: account });
       } else {
+        dispatch({ type: 'LOGOUT_SUCCESS', payload: {} });
       }
     });
   }, []);
@@ -115,8 +116,11 @@ export default function TopHeadPage() {
         </NavbarMenuItem>
         <NavbarMenuItem className='hover:text-default-red hover:bg-stone-100 rounded p-4 block sm:hidden '>
           <Link
-            href={'#'}
-            className=''>
+            href={'/account'}
+            className=''
+            onClick={() => {
+              setIsMenuOpen(false);
+            }}>
             Tài khoản
           </Link>
         </NavbarMenuItem>
@@ -193,7 +197,7 @@ export default function TopHeadPage() {
         </Popover>
 
         {/* User */}
-        {state.userProfile !== undefined ? (
+        {state.userProfile ? (
           <ButtonProfilePage />
         ) : (
           <Popover

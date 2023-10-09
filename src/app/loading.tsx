@@ -1,14 +1,14 @@
 'use client';
-import { Skeleton } from '@nextui-org/react';
+
+import { Spinner } from '@nextui-org/react';
+
 export default function LoadingPage() {
   return (
-    <div
-      className='p-4'
-      id='loadingBanner'>
-      <Skeleton className='rounded-lg'>
-        <div
-          className={`2xl:h-[450px] xl:h-[400px] lg:h[300px] md:h-[240px] sm:h-[190px] h-[150px] rounded-lg bg-default-300`}></div>
-      </Skeleton>
+    <div className='sm:w-[500px] mx-auto mt-6 w-full flex flex-col justify-center items-center gap-4 p-4'>
+      <Spinner
+        size='lg'
+        color='danger'
+      />
     </div>
   );
 }

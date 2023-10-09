@@ -28,23 +28,22 @@ export default function ButtonProfilePage() {
       });
   };
   return (
-    <div>
+    <div className='sm:inline-block hidden'>
       <Popover
         placement='bottom'
         showArrow>
         <PopoverTrigger>
           <Button
+            className=''
             isIconOnly
             variant='light'
             aria-label='User Profile'>
             <Avatar
               isBordered
-              color={
-                state.userProfile?.photoURL !== null ? 'primary' : 'default'
-              }
+              color={state.userProfile ? 'primary' : 'default'}
               name={
-                state.userProfile?.displayName !== null
-                  ? state.userProfile.displayName.charAt(0).toUpperCase()
+                state.userProfile
+                  ? state.userProfile.displayName?.charAt(0).toUpperCase()
                   : ''
               }
               src={state.userProfile?.photoURL}

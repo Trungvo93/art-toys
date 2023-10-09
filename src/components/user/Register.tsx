@@ -146,18 +146,16 @@ export default function RegisterPage() {
     }
   };
 
-  if (firstLoad === false) {
-    return (
-      <div className='sm:w-[500px] mx-auto mt-6 w-full flex flex-col justify-center items-center gap-4'>
-        <Spinner
-          size='lg'
-          color='danger'
-        />
-      </div>
-    );
-  } else {
-    if (state.userProfile !== undefined) {
-      redirect('/');
+  if (!state.userProfile) {
+    if (state.userProfile === null) {
+      return (
+        <div className='sm:w-[500px] mx-auto mt-6 w-full flex flex-col justify-center items-center gap-4'>
+          <Spinner
+            size='lg'
+            color='danger'
+          />
+        </div>
+      );
     } else {
       return (
         <form>
@@ -264,5 +262,7 @@ export default function RegisterPage() {
         </form>
       );
     }
+  } else {
+    redirect('/');
   }
 }

@@ -4,8 +4,6 @@ import { useMemo, useState, useEffect, useContext } from 'react';
 import { auth } from '../../../firebase/firebaseConfig';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { AppContext } from '@/context/contextConfig';
-import { notification } from 'antd';
-import type { NotificationPlacement } from 'antd/es/notification/interface';
 
 export default function LoginWithEmailPage() {
   const { state, dispatch } = useContext(AppContext);

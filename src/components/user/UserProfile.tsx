@@ -1,17 +1,9 @@
 'use client';
 import { auth } from '../../../firebase/firebaseConfig';
-import { updateProfile } from 'firebase/auth';
 import { useEffect, useState, useContext } from 'react';
-import {
-  Button,
-  Spinner,
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  useDisclosure,
-} from '@nextui-org/react';
+import { Button, Spinner } from '@nextui-org/react';
+import { signOut } from 'firebase/auth';
+
 import { AppContext } from '@/context/contextConfig';
 import { useRouter } from 'next/navigation';
 import EditProfilePage from './EditProfile';
@@ -19,15 +11,11 @@ import ChangePasswordPage from './ChangePassword';
 import ChangeAvatarPage from './ChangeAvatar';
 export default function UserProfilePage() {
   const { state, dispatch } = useContext(AppContext);
-  const [firstLoad, setFirstLoad] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
-  useEffect(() => {
-    setTimeout(() => {
-      setFirstLoad(true);
-    }, 2000);
-  }, []);
+
   useEffect(() => {
     if (state.userProfile === undefined) {
       setIsEdit(false);
@@ -37,16 +25,40 @@ export default function UserProfilePage() {
   const handleGotoHomePage = () => {
     router.push('/');
   };
+  const handleGotoLoginPage = () => {
+    router.push('/login');
+  };
   const handleEdit = () => {
     setIsEdit(!isEdit);
   };
-  if (state.userProfile === undefined) {
-    if (firstLoad === true) {
+  const handleSignOut = () => {
+    setIsLoading(true);
+    signOut(auth)
+      .then(() => {
+        dispatch({ type: 'LOGOUT_SUCCESS', payload: {} });
+      })
+      .catch((error) => {
+        setIsLoading(false);
+        console.log('Error sign out: ', error);
+      });
+  };
+  if (!state.userProfile) {
+    if (state.userProfile === undefined) {
       return (
-        <div className='sm:w-[500px] mx-auto mt-6 w-full flex flex-col justify-center items-center gap-4'>
+        <div className='sm:w-[500px] mx-auto mt-6 w-full flex flex-col justify-center items-center gap-4 p-4'>
           <p className='text-xl text-center'>Bạn chưa đăng nhập tài khoản</p>
           <Button
+            className='sm:w-auto w-full'
             color='danger'
+            onClick={() => {
+              handleGotoLoginPage();
+            }}>
+            Đăng nhập tài khoản
+          </Button>
+          <Button
+            className='sm:w-auto w-full'
+            color='secondary'
+            variant='ghost'
             onClick={() => {
               handleGotoHomePage();
             }}>
@@ -91,6 +103,15 @@ export default function UserProfilePage() {
                 Sửa thông tin
               </Button>
               <ChangePasswordPage />
+              <Button
+                isLoading={isLoading}
+                color='danger'
+                variant='ghost'
+                onClick={() => {
+                  handleSignOut();
+                }}>
+                Đăng xuất
+              </Button>
             </div>
           </div>
         )}
