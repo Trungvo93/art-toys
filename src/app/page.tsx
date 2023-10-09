@@ -22,16 +22,14 @@ async function getData() {
       console.error(error);
     });
 
-  // await new Promise((resolve) => setTimeout(resolve, 1000));
+  await new Promise((resolve) => setTimeout(resolve, 2000));
   return result;
 }
 export default async function Page() {
   const data: Banner[] | null = await getData();
   return (
     <main>
-      <Suspense fallback={<p>Loading feed...</p>}>
-        <BannerPage data={data} />
-      </Suspense>
+      <BannerPage data={data} />
     </main>
   );
 }
