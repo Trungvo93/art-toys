@@ -47,13 +47,6 @@ export default function BannerPage(props: { data: Banner[] | null }) {
           />
         </SwiperSlide>
       </Swiper>
-
-      <Button
-        onClick={() => {
-          console.log(data);
-        }}>
-        click
-      </Button>
     </div>
   );
 }

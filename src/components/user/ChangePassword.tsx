@@ -18,6 +18,7 @@ import {
   EmailAuthProvider,
   updatePassword,
 } from 'firebase/auth';
+
 export default function ChangePasswordPage() {
   const { state, dispatch } = useContext(AppContext);
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
@@ -41,6 +42,8 @@ export default function ChangePasswordPage() {
   const [isInvalidPassword, setIsInvalidPassword] = useState(false);
   const [isInvalidRePassword, setIsInvalidRePassword] = useState(false);
 
+  const [errorOldPassword, setErrorOldPassword] = useState('');
+  const [showError, setShowError] = useState('');
   useEffect(() => {
     setIgnoreFistCheck(true);
   }, []);
@@ -48,9 +51,12 @@ export default function ChangePasswordPage() {
   useMemo(() => {
     if (oldPassword.length > 0 || ignoreFistCheck == false) {
       setIsInvalidOldPassword(false);
+      setErrorOldPassword('');
     } else {
       setIsInvalidOldPassword(true);
+      setErrorOldPassword('Mật khẩu không được để trống');
     }
+    setShowError('');
   }, [oldPassword]);
 
   //Validate Password
@@ -65,6 +71,7 @@ export default function ChangePasswordPage() {
     } else {
       setIsInvalidRePassword(true);
     }
+    setShowError('');
   }, [password]);
 
   //Validate Re-password
@@ -74,12 +81,21 @@ export default function ChangePasswordPage() {
     } else {
       setIsInvalidRePassword(true);
     }
+    setShowError('');
   }, [rePassword]);
+
+  const handleClodeModal = () => {
+    setOldPassword('');
+    setPassword('');
+    setRePassword('');
+    onClose();
+  };
 
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
     if (oldPassword.length <= 0) {
       setIsInvalidOldPassword(true);
+      setErrorOldPassword('Mật khẩu không được để trống');
     }
     if (password.length <= 0) {
       setIsInvalidPassword(true);
@@ -98,20 +114,36 @@ export default function ChangePasswordPage() {
         oldPassword
       );
       if (auth.currentUser) {
+        setIsLoading(true);
         reauthenticateWithCredential(auth.currentUser, credential)
           .then(() => {
             if (auth.currentUser) {
               updatePassword(auth.currentUser, password)
                 .then(() => {
                   console.log('change password success');
+                  setIsLoading(false);
+                  setOldPassword('');
+                  setPassword('');
+                  setRePassword('');
+                  onClose();
                 })
                 .catch((err) => {
+                  setIsLoading(false);
                   console.log('Error updating password: ', err);
                 });
             }
           })
           .catch((error) => {
-            console.log('Error re-authenticate: ', error);
+            console.log('Error re-authenticate: ', error.code);
+            setIsLoading(false);
+            if (error.code === 'auth/invalid-login-credentials') {
+              setIsInvalidOldPassword(true);
+              setErrorOldPassword('Mật khẩu cũ không chính xác');
+            }
+            if (error.code === 'auth/too-many-requests') {
+              setIsInvalidOldPassword(true);
+              setShowError('Thao tác quá nhiều lần, hãy thử lại sau 5 phút');
+            }
           });
       }
     }
@@ -131,9 +163,12 @@ export default function ChangePasswordPage() {
         isOpen={isOpen}
         onOpenChange={() => {
           onOpenChange();
+        }}
+        onClose={() => {
+          handleClodeModal();
         }}>
         <ModalContent>
-          {(onClose) => (
+          {
             <form>
               <ModalHeader className='flex flex-col gap-1'>
                 Thay đổi mật khẩu
@@ -158,9 +193,7 @@ export default function ChangePasswordPage() {
                   value={oldPassword}
                   onValueChange={setOldPassword}
                   isInvalid={isInvalidOldPassword}
-                  errorMessage={
-                    isInvalidOldPassword && 'Mật khẩu không được để trống'
-                  }
+                  errorMessage={isInvalidOldPassword && errorOldPassword}
                   color={isInvalidOldPassword ? 'danger' : 'default'}
                 />
                 <Input
@@ -212,15 +245,21 @@ export default function ChangePasswordPage() {
                   }
                   color={isInvalidRePassword ? 'danger' : 'default'}
                 />
+                {showError.length > 0 && (
+                  <span className='text-default-red text-xs'>{showError}</span>
+                )}
               </ModalBody>
               <ModalFooter>
                 <Button
                   color='danger'
                   variant='light'
-                  onPress={onClose}>
+                  onPress={() => {
+                    handleClodeModal();
+                  }}>
                   Quay lại
                 </Button>
                 <Button
+                  isLoading={isLoading}
                   type='submit'
                   color='danger'
                   onClick={(e) => {
@@ -230,7 +269,7 @@ export default function ChangePasswordPage() {
                 </Button>
               </ModalFooter>
             </form>
-          )}
+          }
         </ModalContent>
       </Modal>
     </div>

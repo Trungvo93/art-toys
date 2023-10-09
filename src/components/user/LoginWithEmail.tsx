@@ -4,6 +4,9 @@ import { useMemo, useState, useEffect, useContext } from 'react';
 import { auth } from '../../../firebase/firebaseConfig';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { AppContext } from '@/context/contextConfig';
+import { notification } from 'antd';
+import type { NotificationPlacement } from 'antd/es/notification/interface';
+
 export default function LoginWithEmailPage() {
   const { state, dispatch } = useContext(AppContext);
   const [email, setEmail] = useState<string>('');
@@ -13,6 +16,9 @@ export default function LoginWithEmailPage() {
   const [isInvalidPassword, setIsInvalidPassword] = useState<boolean>(false);
   const [ignoreFistCheck, setIgnoreFistCheck] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  const [errorCode, setErrorCode] = useState<string>('');
+
   const toggleVisibility = () => setShowPassword(!showPassword);
   useEffect(() => {
     setIgnoreFistCheck(true);
@@ -27,6 +33,7 @@ export default function LoginWithEmailPage() {
       const result = validateEmail(email) ? false : true;
       setIsInvalidEmail(result);
     }
+    setErrorCode('');
   }, [email]);
 
   //Validate Password
@@ -36,6 +43,7 @@ export default function LoginWithEmailPage() {
     } else {
       setIsInvalidPassword(true);
     }
+    setErrorCode('');
   }, [password]);
 
   //Submit
@@ -60,8 +68,11 @@ export default function LoginWithEmailPage() {
           dispatch({ type: 'LOGIN_SUCCESS', payload: user });
         })
         .catch((error) => {
-          console.log('login error: ', error);
+          console.log('login error: ', error.code);
           setIsLoading(false);
+          if (error.code === 'auth/invalid-login-credentials') {
+            setErrorCode('Tài khoản hoặc mật khẩu không chính xác!');
+          }
         });
     }
   };
@@ -116,6 +127,11 @@ export default function LoginWithEmailPage() {
           errorMessage={isInvalidPassword && 'Mật khẩu không được để trống'}
           color={isInvalidPassword ? 'danger' : 'default'}
         />
+        {errorCode.length > 0 ? (
+          <span className='text-default-red text-xs'>{errorCode}</span>
+        ) : (
+          ''
+        )}
         <Button
           type='submit'
           isLoading={isLoading}

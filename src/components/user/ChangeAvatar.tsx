@@ -21,6 +21,7 @@ interface Avatar {
 export default function ChangeAvatarPage() {
   const { state, dispatch } = useContext(AppContext);
   const [avatar, setAvatar] = useState<Avatar | undefined>(undefined);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     return () => {
@@ -45,6 +46,7 @@ export default function ChangeAvatarPage() {
         storage,
         'avatar/' + uuidv4() + '-' + avatar?.name
       );
+      setIsLoading(true);
       const uploadTask = uploadBytesResumable(storageRef, avatar?.fileAvatar);
       uploadTask.on(
         'state_changed',
@@ -80,6 +82,7 @@ export default function ChangeAvatarPage() {
               console.log('Error unknown: ', error.code);
               break;
           }
+          setIsLoading(false);
         },
         () => {
           // Upload completed successfully, now we can get the download URL
@@ -102,6 +105,7 @@ export default function ChangeAvatarPage() {
                   console.log('Error upload Avatar to User: ', error);
                 });
             }
+            setIsLoading(false);
           });
         }
       );
@@ -140,6 +144,7 @@ export default function ChangeAvatarPage() {
       </Button>
       {avatar ? (
         <Button
+          isLoading={isLoading}
           color='danger'
           onClick={() => {
             handleSubmit();

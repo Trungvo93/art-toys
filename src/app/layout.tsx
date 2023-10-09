@@ -5,6 +5,7 @@ import TopHeadPage from '@/components/TopHead';
 import { Providers } from './providers';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { AppContextProvider } from '@/context/contextConfig';
+import StyledComponentsRegistry from '../lib/AntdRegistry';
 const poppins = Poppins({ subsets: ['latin'], weight: '400' });
 
 export const metadata: Metadata = {
@@ -31,7 +32,9 @@ export default function RootLayout({
         <Providers>
           <AppContextProvider>
             <TopHeadPage />
-            <div className=''>{children}</div>
+            <StyledComponentsRegistry>
+              <div className=''>{children}</div>
+            </StyledComponentsRegistry>
           </AppContextProvider>
         </Providers>
       </body>

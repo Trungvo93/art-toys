@@ -21,6 +21,7 @@ export default function UserProfilePage() {
   const { state, dispatch } = useContext(AppContext);
   const [firstLoad, setFirstLoad] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
+
   const router = useRouter();
   useEffect(() => {
     setTimeout(() => {
@@ -32,19 +33,7 @@ export default function UserProfilePage() {
       setIsEdit(false);
     }
   }, [state.userProfile]);
-  const handleUpdateProfile = () => {
-    const profile = auth.currentUser;
 
-    if (profile != null) {
-      updateProfile(profile, { displayName: 'Thành Trung 126' })
-        .then(() => {
-          dispatch({ type: 'USER_UPDATE_SUCCESS', payload: profile });
-        })
-        .catch((error) => {
-          console.log('Error updating: ', error);
-        });
-    }
-  };
   const handleGotoHomePage = () => {
     router.push('/');
   };
