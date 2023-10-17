@@ -1,6 +1,6 @@
 'use client';
 import { Skeleton } from '@nextui-org/react';
-export default function LoadingBannerPage() {
+export default function LoadingNewArrivalPage() {
   return (
     <div>
       <Skeleton className='rounded-lg'>

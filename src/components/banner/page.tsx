@@ -6,8 +6,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 
-import { Button, Image, Skeleton } from '@nextui-org/react';
-import { useState, useEffect } from 'react';
+import { Image } from '@nextui-org/react';
 type Banner = {
   id: string;
   src: string;
@@ -15,7 +14,7 @@ type Banner = {
 export default function BannerPage(props: { data: Banner[] | null }) {
   const { data } = props;
   return (
-    <div className='p-4'>
+    <div className=''>
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
         spaceBetween={50}
