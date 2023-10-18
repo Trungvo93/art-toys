@@ -1,6 +1,6 @@
 import BannerPage from '@/components/banner/page';
 import { database } from '../../firebase/firebaseConfig';
-import { ref, onValue, get } from 'firebase/database';
+import { ref, get } from 'firebase/database';
 import { Suspense } from 'react';
 import LoadingBanner from '@/components/banner/LoadingBanner';
 import LoadingNewArrivalPage from '@/components/products/new-arrival/LoadingNewArrival';

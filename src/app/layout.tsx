@@ -1,12 +1,15 @@
 import './globals.css';
 import type { Metadata } from 'next';
-import { Inter, Poppins } from 'next/font/google';
+import { Inter, Poppins, Roboto_Slab, Nunito } from 'next/font/google';
 import TopHeadPage from '@/components/TopHead';
 import { Providers } from './providers';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { AppContextProvider } from '@/context/contextConfig';
 import StyledComponentsRegistry from '../lib/AntdRegistry';
 const poppins = Poppins({ subsets: ['latin'], weight: '400' });
+const inter = Inter({ subsets: ['latin'] });
+const robotoSlab = Roboto_Slab({ subsets: ['latin'] });
+const nunito = Nunito({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Putaxa - Art Toys',
@@ -27,7 +30,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={poppins.className}
+        className={nunito.className}
         suppressHydrationWarning>
         <Providers>
           <AppContextProvider>
