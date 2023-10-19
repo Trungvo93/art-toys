@@ -1,4 +1,3 @@
-'use client';
 // import { headers } from 'next/headers';
 import {
   ref,
@@ -26,12 +25,7 @@ async function getProductItem() {
   // const protocol = headersList.get('x-forwarded-proto') || '';
   // const pathname = headersList.get('x-invoke-path') || '';
   const productsRef = ref(database, 'products');
-  const que = query(
-    productsRef,
-    orderByChild('id'),
-    // limitToFirst(1),
-    equalTo(5)
-  );
+  const que = query(productsRef, orderByChild('id'), equalTo(5));
   let result: Product | null = null;
   await get(que)
     .then((snapshot) => {
