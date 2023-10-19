@@ -1,4 +1,5 @@
-// import { headers } from 'next/headers';
+// 'use client';
+import { headers } from 'next/headers';
 import {
   ref,
   get,
@@ -20,14 +21,19 @@ type Product = {
   quantity: number;
 };
 async function getProductItem() {
-  // const headersList = headers();
-  // const domain = headersList.get('x-forwarded-host') || '';
-  // const protocol = headersList.get('x-forwarded-proto') || '';
-  // const pathname = headersList.get('x-invoke-path') || '';
+  const headersList = headers();
+  const domain = headersList.get('x-forwarded-host') || '';
+  const protocol = headersList.get('x-forwarded-proto') || '';
+  const pathname = headersList.get('x-invoke-path') || '';
+  const productID = pathname.slice(10);
   const productsRef = ref(database, 'products');
-  const que = query(productsRef, orderByChild('id'), equalTo(5));
-  let result: Product | null = null;
-  await get(que)
+  const productQuery = query(
+    productsRef,
+    orderByChild('id'),
+    equalTo(productID)
+  );
+  let result: Product[] | null = null;
+  await get(productQuery)
     .then((snapshot) => {
       if (snapshot.exists()) {
         console.log(snapshot.val());
@@ -42,11 +48,12 @@ async function getProductItem() {
   return result;
 }
 export default async function ProductPage() {
-  const dataProduct: Product | null = await getProductItem();
+  const dataProduct: Product[] | null = await getProductItem();
   console.log(dataProduct);
+
   return (
     <div>
-      <h1>Current pathname: {}</h1>
+      <h1>Current pathname: {dataProduct && dataProduct[0]['title']}</h1>
     </div>
   );
 }

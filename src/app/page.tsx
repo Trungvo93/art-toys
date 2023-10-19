@@ -21,7 +21,7 @@ type Product = {
   quantity: number;
 };
 async function getBanner() {
-  const bannerRef = ref(database, 'banner');
+  const bannerRef = ref(database, 'banners');
   let result: Banner[] | null = null;
   await get(bannerRef)
     .then((snapshot) => {

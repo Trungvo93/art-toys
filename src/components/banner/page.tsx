@@ -6,15 +6,17 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 
-import { Image } from '@nextui-org/react';
+// import { Image } from '@nextui-org/react';
+import Image from 'next/image';
 type Banner = {
   id: string;
   src: string;
 };
 export default function BannerPage(props: { data: Banner[] | null }) {
   const { data } = props;
+
   return (
-    <div className=''>
+    <div>
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
         spaceBetween={50}
@@ -22,29 +24,22 @@ export default function BannerPage(props: { data: Banner[] | null }) {
         navigation
         pagination={{ clickable: true }}
         autoplay={{ delay: 2500 }}
-        className='rounded-xl overflow-hidden'>
-        <SwiperSlide
-          className='cursor-pointer '
-          onClick={() => {
-            console.log('click ne');
-          }}>
-          <Image
-            src={data ? data[0].src : ''}
-            alt='NextUI hero Image'
-          />
-        </SwiperSlide>
-        <SwiperSlide className='cursor-pointer '>
-          <Image
-            src={data ? data[1].src : ''}
-            alt='NextUI hero Image'
-          />
-        </SwiperSlide>
-        <SwiperSlide className='cursor-pointer '>
-          <Image
-            src={data ? data[0].src : ''}
-            alt='NextUI hero Image'
-          />
-        </SwiperSlide>
+        className=' overflow-hidden'>
+        {data?.map((item, index) => (
+          <SwiperSlide
+            className='cursor-pointer  '
+            key={index}>
+            <div className='flex justify-center'>
+              <Image
+                src={item['src']}
+                alt='NextUI hero Image'
+                width={2000}
+                height={1000}
+                className='w-auto h-auto object-cover '
+              />
+            </div>
+          </SwiperSlide>
+        ))}
       </Swiper>
     </div>
   );
