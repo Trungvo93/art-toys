@@ -1,6 +1,7 @@
 'use client';
 
-import { Button, Image } from '@nextui-org/react';
+import { Button } from '@nextui-org/react';
+import Image from 'next/image';
 type Product = {
   id: string;
   title: string;
@@ -16,7 +17,7 @@ export default function NewArrivalPage(props: { data: Product[] | null }) {
   const { data } = props;
   const reverseData = data?.reverse().slice(0, 8);
   return (
-    <div className='mt-16 sm:mx-40'>
+    <div className='mt-16 xl:mx-40  mx-8'>
       <div className='mb-8'>
         <h1 className='text-center text-2xl'>Hàng mới về</h1>
       </div>
@@ -29,16 +30,16 @@ export default function NewArrivalPage(props: { data: Product[] | null }) {
               <Image
                 src={item.preview_url[1]}
                 alt={item.title}
-                radius='none'
-                removeWrapper
-                className=' h-full object-cover   '
+                width={1000}
+                height={500}
+                className='w-full h-auto object-cover   '
               />
               <Image
                 src={item.preview_url[0]}
                 alt={item.title}
-                radius='none'
-                removeWrapper
-                className=' h-full object-cover absolute top-0 left-0 opacity-100 group-hover:opacity-0  '
+                width={1000}
+                height={500}
+                className=' w-full h-auto object-cover absolute top-0 left-0 opacity-100 group-hover:opacity-0  '
               />
             </div>
             <div className='grid gap-2 px-4 pb-4'>
