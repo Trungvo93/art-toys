@@ -1,6 +1,5 @@
 'use client';
 
-import { Button } from '@nextui-org/react';
 import Image from 'next/image';
 type Product = {
   id: string;
@@ -21,7 +20,7 @@ export default function NewArrivalPage(props: { data: Product[] | null }) {
       <div className='mb-8'>
         <h1 className='text-center text-2xl'>Hàng mới về</h1>
       </div>
-      <div className='grid md:grid-cols-4 grid-cols-2    gap-y-12 md:gap-x-12 sm:gap-x-6 gap-x-4'>
+      <div className='grid md:grid-cols-4 grid-cols-2    gap-y-12 md:gap-x-12 gap-x-6'>
         {reverseData?.map((item, index) => (
           <div
             key={index}

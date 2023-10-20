@@ -6,7 +6,6 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 
-// import { Image } from '@nextui-org/react';
 import Image from 'next/image';
 type Banner = {
   id: string;
@@ -22,7 +21,8 @@ export default function BannerPage(props: { data: Banner[] | null }) {
         spaceBetween={50}
         slidesPerView={1}
         navigation
-        pagination={{ clickable: true }}
+        loop={true}
+        pagination={{ clickable: true, dynamicBullets: true }}
         autoplay={{ delay: 2500 }}
         className=' overflow-hidden'>
         {data?.map((item, index) => (
