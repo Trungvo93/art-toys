@@ -17,11 +17,11 @@ export default function NewArrivalPage(props: { data: Product[] | null }) {
   const { data } = props;
   const reverseData = data?.reverse().slice(0, 8);
   return (
-    <div className='mt-16 xl:mx-40  mx-8'>
+    <div className='mt-16 xl:mx-40  sm:mx-8 mx-4'>
       <div className='mb-8'>
         <h1 className='text-center text-2xl'>Hàng mới về</h1>
       </div>
-      <div className='grid md:grid-cols-4 grid-cols-2  gap-y-12 gap-x-12'>
+      <div className='grid md:grid-cols-4 grid-cols-2    gap-y-12 md:gap-x-12 sm:gap-x-6 gap-x-4'>
         {reverseData?.map((item, index) => (
           <div
             key={index}
