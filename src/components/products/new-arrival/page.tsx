@@ -21,7 +21,7 @@ export default function NewArrivalPage(props: { data: Product[] | null }) {
       <div className='mb-8'>
         <h1 className='text-center text-2xl'>Hàng mới về</h1>
       </div>
-      <div className='grid md:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-y-12 gap-x-12'>
+      <div className='grid md:grid-cols-4 grid-cols-2  gap-y-12 gap-x-12'>
         {reverseData?.map((item, index) => (
           <div
             key={index}
