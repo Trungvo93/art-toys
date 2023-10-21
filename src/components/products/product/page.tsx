@@ -8,7 +8,6 @@ import 'swiper/css/scrollbar';
 
 import Image from 'next/image';
 import { useState } from 'react';
-import { title } from 'process';
 type Product = {
   id: string;
   title: string;
@@ -28,6 +27,7 @@ export default function ProductItemPage(props: {
   const productItem = data;
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
   console.log(data);
+  console.log('test: ', test);
   return (
     <div className='mt-8 xl:mx-64 lg:mx-52  sm:mx-8 mx-4'>
       <div className='grid md:grid-cols-2 grid-cols-1 gap-16  '>

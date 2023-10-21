@@ -64,7 +64,7 @@ export default async function ProductPage() {
       <Suspense fallback={<div>Loading...</div>}>
         <ProductItemPage
           data={dataProduct}
-          test={productID}
+          test={pathname}
         />
       </Suspense>
     </div>
