@@ -20,8 +20,11 @@ type Product = {
   detail: string[];
   quantity: number;
 };
-export default function ProductItemPage(props: { data: Product | null }) {
-  const { data } = props;
+export default function ProductItemPage(props: {
+  data: Product | null;
+  test: string;
+}) {
+  const { data, test } = props;
   const productItem = data;
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
   console.log(data);
@@ -90,7 +93,7 @@ export default function ProductItemPage(props: { data: Product | null }) {
           </p>
         </div>
       </div>
-      <div></div>
+      <div>{test}</div>
     </div>
   );
 }

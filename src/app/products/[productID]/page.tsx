@@ -56,10 +56,16 @@ async function getProductItem() {
 }
 export default async function ProductPage() {
   const dataProduct: Product | null = await getProductItem();
+  const headersList = headers();
+  const pathname = headersList.get('x-invoke-path') || '';
+  const productID = pathname.slice(10);
   return (
     <div>
       <Suspense fallback={<div>Loading...</div>}>
-        <ProductItemPage data={dataProduct} />
+        <ProductItemPage
+          data={dataProduct}
+          test={productID}
+        />
       </Suspense>
     </div>
   );
