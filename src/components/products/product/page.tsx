@@ -24,7 +24,7 @@ export default function ProductItemPage(props: { data: Product | null }) {
   const { data } = props;
   const productItem = data;
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
-  // console.log(data);
+  console.log(data);
   return (
     <div className='mt-8 xl:mx-64 lg:mx-52  sm:mx-8 mx-4'>
       <div className='grid md:grid-cols-2 grid-cols-1 gap-16  '>
