@@ -26,10 +26,10 @@ type Product = {
   detail: string[];
   quantity: number;
 };
-async function getProductItem() {
+async function getProductItem(productID: string) {
   const headersList = headers();
   const pathname = headersList.get('x-invoke-path') || '';
-  const productID = pathname.slice(10);
+  // const productID = pathname.slice(10);
   const productsRef = ref(database, 'products');
   const productQuery = query(
     productsRef,
@@ -54,18 +54,17 @@ async function getProductItem() {
     });
   return result;
 }
-export default async function ProductPage() {
-  const dataProduct: Product | null = await getProductItem();
-  const headersList = headers();
-  const pathname = headersList.get('x-invoke-path') || '';
-  const productID = pathname.slice(10);
+export default async function ProductPage({
+  params,
+}: {
+  params: { productID: string };
+}) {
+  const dataProduct: Product | null = await getProductItem(params.productID);
+
   return (
     <div>
       <Suspense fallback={<div>Loading...</div>}>
-        <ProductItemPage
-          data={dataProduct}
-          test={pathname}
-        />
+        <ProductItemPage data={dataProduct} />
       </Suspense>
     </div>
   );
