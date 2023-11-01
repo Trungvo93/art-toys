@@ -92,10 +92,10 @@ export default function LoginPage() {
           <h1 className='text-xl text-default-red text-center'>
             Đăng nhập tài khoản
           </h1>
-          <div className=' flex flex-col gap-4 '>
+          <div className=' flex flex-col gap-4  '>
             <Input
               classNames={{
-                base: 'max-w-full sm:min-w-[500px] min-w-[250px] h-10',
+                base: 'max-w-full sm:min-w-[500px] min-w-[250px] h-10 text-base focus:text-base',
                 mainWrapper: 'h-full',
                 input: 'text-small',
                 inputWrapper:
