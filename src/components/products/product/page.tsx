@@ -27,6 +27,7 @@ export default function ProductItemPage(props: { data: Product | null }) {
   return (
     <div className='mt-8 xl:mx-64 lg:mx-52  sm:mx-8 mx-4'>
       <div className='grid md:grid-cols-2 grid-cols-1 gap-16  '>
+        {/* Preview Image */}
         <div>
           <Swiper
             modules={[FreeMode, Navigation, Thumbs]}
@@ -78,9 +79,10 @@ export default function ProductItemPage(props: { data: Product | null }) {
             ))}
           </Swiper>
         </div>
-        <div>
-          <p className='font-semibold text-xl'>{productItem?.title}</p>
-          <p className='text-default-red'>
+
+        <div className='flex flex-col gap-4'>
+          <p className='font-bold text-3xl'>{productItem?.title}</p>
+          <p className='text-default-red font-semibold'>
             {productItem?.price
               .toString()
               .replace(/[^-\d.]/g, '')
