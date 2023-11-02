@@ -20,7 +20,7 @@ type Product = {
   title: string;
   category: string;
   brand: string;
-  description: string;
+  description: string[];
   preview_url: string[];
   detail: string[];
   skus: SKUS[];
@@ -66,6 +66,7 @@ async function getProducts() {
 export default async function Page() {
   const dataBanner: Banner[] | null = await getBanner();
   const dataProducts: Product[] | null = await getProducts();
+
   return (
     <main className='p-4 '>
       <Suspense fallback={<LoadingBanner />}>

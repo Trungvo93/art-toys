@@ -20,7 +20,7 @@ type Product = {
   title: string;
   category: string;
   brand: string;
-  description: string;
+  description: string[];
   preview_url: string[];
   detail: string[];
   skus: SKUS[];
@@ -50,15 +50,8 @@ export default function ProductItemPage(props: { data: Product | null }) {
       setPreAddItem({ ...preAddItem, count: --count });
     }
   };
-  const handleChangeCount = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = Number(e.target.value);
-    if (value >= 1) {
-      setPreAddItem({ ...preAddItem, count: value });
-    }
-    if (value === 0) {
-      setPreAddItem({ ...preAddItem, count: 1 });
-    }
-  };
+
+  console.log(productItem);
   return (
     <div className='mt-8 xl:mx-64 lg:mx-52  sm:mx-8 mx-4'>
       <div className='grid md:grid-cols-2 grid-cols-1 gap-16  '>
@@ -115,7 +108,7 @@ export default function ProductItemPage(props: { data: Product | null }) {
           </Swiper>
         </div>
 
-        <div className='flex flex-col gap-4'>
+        <div className='flex flex-col gap-8'>
           <p className='font-bold text-3xl'>{productItem?.title}</p>
           <p className='text-default-red font-semibold'>
             {preAddItem.typeSku === 'signle'
@@ -129,6 +122,8 @@ export default function ProductItemPage(props: { data: Product | null }) {
                   .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
             <span className='text-xs '>{productItem && 'đ'}</span>
           </p>
+
+          {/* Type Box */}
           <div className='flex gap-4'>
             <Button
               radius='none'
@@ -151,8 +146,10 @@ export default function ProductItemPage(props: { data: Product | null }) {
               </Button>
             )}
           </div>
+
+          {/* Quantity */}
           <div className='grid gap-2'>
-            <p className=''>SỐ LƯỢNG</p>
+            <p className='font-bold'>SỐ LƯỢNG</p>
             <div className='flex gap-4 items-center'>
               <button
                 className={` h-8 w-8 border ${
@@ -174,7 +171,34 @@ export default function ProductItemPage(props: { data: Product | null }) {
               </button>
             </div>
           </div>
+
+          <Button
+            color='danger'
+            radius='none'>
+            Thêm vào giỏ hàng
+          </Button>
+          <div className='grid gap-4'>
+            <p className='font-bold'>MÔ TẢ</p>
+            <div className='grid gap-4'>
+              {productItem?.description.map((item, index) => (
+                <p key={index}>{item}</p>
+              ))}
+            </div>
+          </div>
         </div>
+      </div>
+      <div className='grid justify-center mt-24'>
+        {productItem?.detail.map((item, index) => (
+          <Image
+            key={index}
+            src={item}
+            priority
+            alt={productItem.title}
+            width={2000}
+            height={1000}
+            className='w-auto h-auto object-cover '
+          />
+        ))}
       </div>
     </div>
   );

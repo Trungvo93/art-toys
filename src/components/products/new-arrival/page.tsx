@@ -1,20 +1,28 @@
 'use client';
 
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+
+type SKUS = {
+  type: string;
+  price: number;
+  count: number;
+  stock: number;
+};
 type Product = {
   id: string;
   title: string;
-  price: number;
   category: string;
   brand: string;
-  description: string;
+  description: string[];
   preview_url: string[];
   detail: string[];
-  quantity: number;
+  skus: SKUS[];
 };
 export default function NewArrivalPage(props: { data: Product[] | null }) {
   const { data } = props;
-  const reverseData = data?.reverse().slice(0, 8);
+  const reverseData = data?.slice(-8, data.length).reverse();
+  const router = useRouter();
   return (
     <div className='mt-16 xl:mx-40  sm:mx-8 mx-4'>
       <div className='mb-8'>
@@ -24,7 +32,10 @@ export default function NewArrivalPage(props: { data: Product[] | null }) {
         {reverseData?.map((item, index) => (
           <div
             key={index}
-            className='grid gap-y-4 border hover:cursor-pointer'>
+            className='grid gap-y-4 border hover:cursor-pointer'
+            onClick={() => {
+              router.push(`/products/${item.id}`);
+            }}>
             <div className=' relative group  '>
               <Image
                 src={item.preview_url[1]}
@@ -47,7 +58,7 @@ export default function NewArrivalPage(props: { data: Product[] | null }) {
                 {item.title}
               </p>
               <p className='text-default-red font-semibold'>
-                {item.price
+                {item.skus[0].price
                   .toString()
                   .replace(/[^-\d.]/g, '')
                   .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
