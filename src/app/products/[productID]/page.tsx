@@ -15,16 +15,21 @@ import { Suspense } from 'react';
 
 import ProductItemPage from '@/components/products/product/page';
 import { isArray } from '@nextui-org/shared-utils';
+type SKUS = {
+  type: string;
+  price: number;
+  count: number;
+  stock: number;
+};
 type Product = {
   id: string;
   title: string;
-  price: number;
   category: string;
   brand: string;
   description: string;
   preview_url: string[];
   detail: string[];
-  quantity: number;
+  skus: SKUS[];
 };
 async function getProductItem(productID: string) {
   const headersList = headers();

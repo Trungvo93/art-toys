@@ -5,7 +5,6 @@ import TopHeadPage from '@/components/TopHead';
 import { Providers } from './providers';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { AppContextProvider } from '@/context/contextConfig';
-import StyledComponentsRegistry from '../lib/AntdRegistry';
 const poppins = Poppins({ subsets: ['latin'], weight: '400' });
 const inter = Inter({ subsets: ['latin'] });
 const robotoSlab = Roboto_Slab({ subsets: ['latin'] });
@@ -35,9 +34,7 @@ export default function RootLayout({
         <Providers>
           <AppContextProvider>
             <TopHeadPage />
-            <StyledComponentsRegistry>
-              <div className=''>{children}</div>
-            </StyledComponentsRegistry>
+            <div className=''>{children}</div>
           </AppContextProvider>
         </Providers>
       </body>

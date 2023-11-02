@@ -9,16 +9,21 @@ type Banner = {
   id: string;
   src: string;
 };
+type SKUS = {
+  type: string;
+  price: number;
+  count: number;
+  stock: number;
+};
 type Product = {
   id: string;
   title: string;
-  price: number;
   category: string;
   brand: string;
   description: string;
   preview_url: string[];
   detail: string[];
-  quantity: number;
+  skus: SKUS[];
 };
 async function getBanner() {
   const bannerRef = ref(database, 'banners');
