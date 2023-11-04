@@ -1,5 +1,3 @@
-// 'use client';
-import { headers } from 'next/headers';
 import {
   ref,
   get,
@@ -32,9 +30,6 @@ type Product = {
   skus: SKUS[];
 };
 async function getProductItem(productID: string) {
-  const headersList = headers();
-  const pathname = headersList.get('x-invoke-path') || '';
-  // const productID = pathname.slice(10);
   const productsRef = ref(database, 'products');
   const productQuery = query(
     productsRef,

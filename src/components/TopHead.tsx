@@ -20,22 +20,70 @@ import {
 } from '@nextui-org/react';
 import { useState, useEffect, useContext } from 'react';
 import Link from 'next/link';
-import LoginWithNumberPhonePage from './user/LoginWithNumberPhone';
 import LoginWithEmailPage from './user/LoginWithEmail';
-import { auth } from '../../firebase/firebaseConfig';
+import { auth, database } from '../../firebase/firebaseConfig';
+import {
+  ref,
+  get,
+  query,
+  orderByChild,
+  equalTo,
+  limitToFirst,
+  orderByValue,
+  orderByKey,
+} from 'firebase/database';
 import { onAuthStateChanged } from 'firebase/auth';
 import ButtonProfilePage from './user/ButtonProfile';
 import { AppContext } from '@/context/contextConfig';
+import CartsPage from './carts/page';
+
 export default function TopHeadPage() {
   const { state, dispatch } = useContext(AppContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [contentBagde, setContentBadge] = useState(0);
   useEffect(() => {
     onAuthStateChanged(auth, (account) => {
       if (account) {
         dispatch({ type: 'LOGIN_SUCCESS', payload: account });
+        const cartRef = ref(database, 'carts');
+        const cartQuery = query(
+          cartRef,
+          orderByChild('userID'),
+          equalTo(account?.uid)
+        );
+
+        get(cartQuery)
+          .then((snapshot) => {
+            if (snapshot.exists()) {
+              console.log(snapshot.val());
+              dispatch({
+                type: 'CARTS_UPDATE_SUCCESS',
+                payload: snapshot.val()[0],
+              });
+              let countItemCart = 0;
+              snapshot.val()[0].carts.map((item: any) => {
+                if (item.quantity[0].count > 0) {
+                  countItemCart++;
+                }
+                if (item.quantity[1].count > 0) {
+                  countItemCart++;
+                }
+              });
+              setContentBadge(countItemCart);
+            } else {
+              console.log('No data available');
+              dispatch({ type: 'CARTS_REMOVE_SUCCESS', payload: {} });
+              setContentBadge(0);
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+          });
       } else {
         dispatch({ type: 'LOGOUT_SUCCESS', payload: {} });
+        dispatch({ type: 'CARTS_REMOVE_SUCCESS', payload: {} });
+        setContentBadge(0);
       }
     });
   }, []);
@@ -244,29 +292,25 @@ export default function TopHeadPage() {
           placement='bottom'
           showArrow={true}>
           <PopoverTrigger>
-            <Tooltip
-              showArrow
-              placement='bottom'
-              content='Giỏ hàng'
-              color='danger'>
-              <Button
-                color='default'
-                variant='light'
-                isIconOnly>
-                <Badge
-                  content='5'
-                  color='danger'
-                  shape='circle'
-                  size='sm'>
-                  <i className='bi bi-bag-plus text-xl'></i>
-                </Badge>
-              </Button>
-            </Tooltip>
+            <Button
+              color='default'
+              variant='light'
+              isIconOnly>
+              <Badge
+                content={contentBagde}
+                color='danger'
+                shape='circle'
+                size='sm'>
+                <i className='bi bi-bag-plus text-xl'></i>
+              </Badge>
+            </Button>
           </PopoverTrigger>
           <PopoverContent>
             <div className='px-1 py-2 '>
-              <div className='text-small font-bold'>Popover Content</div>
-              <div className='text-tiny'>This is the popover content</div>
+              <div className='text-small font-bold'>
+                {state.carts ? 'Giỏ hàng của bạn' : 'Đăng nhập để xem giỏ hàng'}
+              </div>
+              <CartsPage />
             </div>
           </PopoverContent>
         </Popover>

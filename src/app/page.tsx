@@ -1,5 +1,6 @@
 import BannerPage from '@/components/banner/page';
 import { database } from '../../firebase/firebaseConfig';
+
 import { ref, get } from 'firebase/database';
 import { Suspense } from 'react';
 import LoadingBanner from '@/components/banner/LoadingBanner';
@@ -25,6 +26,7 @@ type Product = {
   detail: string[];
   skus: SKUS[];
 };
+
 async function getBanner() {
   const bannerRef = ref(database, 'banners');
   let result: Banner[] | null = null;
@@ -63,10 +65,10 @@ async function getProducts() {
 
   return result;
 }
+
 export default async function Page() {
   const dataBanner: Banner[] | null = await getBanner();
   const dataProducts: Product[] | null = await getProducts();
-
   return (
     <main className='p-4 '>
       <Suspense fallback={<LoadingBanner />}>
