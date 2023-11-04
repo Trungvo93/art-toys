@@ -7,8 +7,23 @@ import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Button, Input } from '@nextui-org/react';
+import { AppContext } from '@/context/contextConfig';
+import {
+  ref,
+  get,
+  query,
+  orderByChild,
+  equalTo,
+  limitToFirst,
+  orderByValue,
+  orderByKey,
+  push,
+  update,
+  set,
+} from 'firebase/database';
+import { database } from '../../../../firebase/firebaseConfig';
 type SKUS = {
   type: string;
   price: number;
@@ -33,6 +48,8 @@ type PREADDITEM = {
 export default function ProductItemPage(props: { data: Product | null }) {
   const { data } = props;
   const productItem = data;
+  const { state, dispatch } = useContext(AppContext);
+
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
   const [preAddItem, setPreAddItem] = useState<PREADDITEM>({
     typeSku: 'signle',
@@ -51,7 +68,82 @@ export default function ProductItemPage(props: { data: Product | null }) {
     }
   };
 
-  console.log(productItem);
+  const handleAddToCart = () => {
+    const index = state.carts?.carts.findIndex(
+      (item) => item.productID === data?.id
+    );
+
+    const newData = { ...state.carts };
+    if (index !== undefined && newData.carts) {
+      if (index >= 0) {
+        if (preAddItem.typeSku === 'signle') {
+          newData.carts[index].quantity[0]['count'] = preAddItem.count;
+        } else {
+          newData.carts[index].quantity[1]['count'] = preAddItem.count;
+        }
+      } else {
+        if (data?.id !== undefined) {
+          newData.carts.push({
+            productID: data?.id,
+            quantity: [
+              {
+                count: preAddItem.typeSku === 'signle' ? preAddItem.count : 0,
+                price: data?.skus[0].price,
+                typeSku: 'signle',
+              },
+              {
+                count: preAddItem.typeSku === 'set' ? preAddItem.count : 0,
+                price: data?.skus[1] ? data?.skus[1].price : 0,
+                typeSku: 'set',
+              },
+            ],
+            thumbnail: data?.preview_url[0],
+            title: data?.title,
+          });
+        }
+      }
+    }
+
+    if (data?.id !== undefined) {
+      const cartRef = ref(database, 'carts');
+
+      get(cartRef)
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            const indexUID = snapshot.val().findIndex((item: any) => {
+              if (item !== undefined) {
+                return item.userID === state.userProfile.uid;
+              }
+            });
+            if (indexUID >= 0) {
+              update(ref(database, `/carts/${indexUID}`), newData);
+            } else {
+              update(ref(database, `/carts/${snapshot.val().length}`), newData);
+            }
+
+            let countItemCart = 0;
+
+            snapshot.val()[indexUID]?.carts.map((item: any) => {
+              if (item.quantity[0].count > 0) {
+                countItemCart++;
+              }
+              if (item.quantity[1].count > 0) {
+                countItemCart++;
+              }
+            });
+            dispatch({
+              type: 'BADGE_UPDATE_SUCCESS',
+              payload: { counts: countItemCart + 1 },
+            });
+          } else {
+            console.log('No data available');
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  };
   return (
     <div className='mt-8 xl:mx-64 lg:mx-52  sm:mx-8 mx-4'>
       <div className='grid md:grid-cols-2 grid-cols-1 gap-16  '>
@@ -174,7 +266,10 @@ export default function ProductItemPage(props: { data: Product | null }) {
 
           <Button
             color='danger'
-            radius='none'>
+            radius='none'
+            onClick={() => {
+              handleAddToCart();
+            }}>
             Thêm vào giỏ hàng
           </Button>
           <div className='grid gap-4'>

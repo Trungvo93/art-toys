@@ -4,6 +4,7 @@ import { Dispatch, createContext, useReducer } from 'react';
 type InitialStateType = {
   userProfile: any;
   carts: Cart | null;
+  badgeCart: Badge;
 };
 type Action = {
   payload: object;
@@ -26,9 +27,13 @@ type Cart = {
   userID: string;
   carts: DetailCart[];
 };
+type Badge = {
+  counts: number;
+};
 const initialState: InitialStateType = {
   userProfile: null,
   carts: null,
+  badgeCart: { counts: 0 },
 };
 const reducer = (state: any, action: Action) => {
   const { payload, type } = action;
@@ -43,6 +48,9 @@ const reducer = (state: any, action: Action) => {
       return { ...state, carts: { ...payload } };
     case 'CARTS_REMOVE_SUCCESS':
       return { ...state, carts: null };
+    case 'BADGE_UPDATE_SUCCESS':
+      return { ...state, badgeCart: { ...payload } };
+
     default:
       return state;
   }

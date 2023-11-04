@@ -36,12 +36,29 @@ import { onAuthStateChanged } from 'firebase/auth';
 import ButtonProfilePage from './user/ButtonProfile';
 import { AppContext } from '@/context/contextConfig';
 import CartsPage from './carts/page';
+import { isArray } from '@nextui-org/shared-utils';
 
+type Quantity = {
+  typeSku: string;
+  price: number;
+  count: number;
+};
+
+type DetailCart = {
+  productID: string;
+  title: string;
+  thumbnail: string;
+  quantity: any[];
+};
+
+type Cart = {
+  userID: string;
+  carts: DetailCart[];
+};
 export default function TopHeadPage() {
   const { state, dispatch } = useContext(AppContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
-  const [contentBagde, setContentBadge] = useState(0);
   useEffect(() => {
     onAuthStateChanged(auth, (account) => {
       if (account) {
@@ -55,14 +72,21 @@ export default function TopHeadPage() {
 
         get(cartQuery)
           .then((snapshot) => {
+            let result: Cart | null = null;
             if (snapshot.exists()) {
-              console.log(snapshot.val());
-              dispatch({
-                type: 'CARTS_UPDATE_SUCCESS',
-                payload: snapshot.val()[0],
-              });
+              if (isArray(snapshot.val())) {
+                result = snapshot.val()?.filter((value: any) => value)[0];
+              } else {
+                result = snapshot.val()[Object.keys(snapshot.val())[0]];
+              }
+              if (result) {
+                dispatch({
+                  type: 'CARTS_UPDATE_SUCCESS',
+                  payload: result,
+                });
+              }
               let countItemCart = 0;
-              snapshot.val()[0].carts.map((item: any) => {
+              result?.carts.map((item: any) => {
                 if (item.quantity[0].count > 0) {
                   countItemCart++;
                 }
@@ -70,11 +94,17 @@ export default function TopHeadPage() {
                   countItemCart++;
                 }
               });
-              setContentBadge(countItemCart);
+              dispatch({
+                type: 'BADGE_UPDATE_SUCCESS',
+                payload: { counts: countItemCart },
+              });
             } else {
               console.log('No data available');
               dispatch({ type: 'CARTS_REMOVE_SUCCESS', payload: {} });
-              setContentBadge(0);
+              dispatch({
+                type: 'BADGE_UPDATE_SUCCESS',
+                payload: { counts: 0 },
+              });
             }
           })
           .catch((error) => {
@@ -83,7 +113,10 @@ export default function TopHeadPage() {
       } else {
         dispatch({ type: 'LOGOUT_SUCCESS', payload: {} });
         dispatch({ type: 'CARTS_REMOVE_SUCCESS', payload: {} });
-        setContentBadge(0);
+        dispatch({
+          type: 'BADGE_UPDATE_SUCCESS',
+          payload: { counts: 0 },
+        });
       }
     });
   }, []);
@@ -297,7 +330,7 @@ export default function TopHeadPage() {
               variant='light'
               isIconOnly>
               <Badge
-                content={contentBagde}
+                content={state.badgeCart.counts}
                 color='danger'
                 shape='circle'
                 size='sm'>
@@ -306,7 +339,7 @@ export default function TopHeadPage() {
             </Button>
           </PopoverTrigger>
           <PopoverContent>
-            <div className='px-1 py-2 '>
+            <div className='px-1 py-2 max-h-[500px] overflow-auto'>
               <div className='text-small font-bold'>
                 {state.carts ? 'Giỏ hàng của bạn' : 'Đăng nhập để xem giỏ hàng'}
               </div>
