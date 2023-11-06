@@ -35,26 +35,10 @@ import {
 import { onAuthStateChanged } from 'firebase/auth';
 import ButtonProfilePage from './user/ButtonProfile';
 import { AppContext } from '@/context/contextConfig';
-import CartsPage from './carts/page';
+import CartsPage from './carts/CartsPage';
 import { isArray } from '@nextui-org/shared-utils';
+import { Cart } from '../lib/DefiningTypes';
 
-type Quantity = {
-  typeSku: string;
-  price: number;
-  count: number;
-};
-
-type DetailCart = {
-  productID: string;
-  title: string;
-  thumbnail: string;
-  quantity: any[];
-};
-
-type Cart = {
-  userID: string;
-  carts: DetailCart[];
-};
 export default function TopHeadPage() {
   const { state, dispatch } = useContext(AppContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);

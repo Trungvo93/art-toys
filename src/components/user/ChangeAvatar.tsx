@@ -12,15 +12,11 @@ import { storage, auth } from '../../../firebase/firebaseConfig';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { updateProfile } from 'firebase/auth';
 import { v4 as uuidv4 } from 'uuid';
-interface Avatar {
-  name: string;
-  previewBlob: string;
-  fileAvatar: Blob;
-}
+import { AvatarType } from '../../lib/DefiningTypes';
 
 export default function ChangeAvatarPage() {
   const { state, dispatch } = useContext(AppContext);
-  const [avatar, setAvatar] = useState<Avatar | undefined>(undefined);
+  const [avatar, setAvatar] = useState<AvatarType | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {

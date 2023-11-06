@@ -24,27 +24,8 @@ import {
   set,
 } from 'firebase/database';
 import { database } from '../../../../firebase/firebaseConfig';
-type SKUS = {
-  type: string;
-  price: number;
-  count: number;
-  stock: number;
-};
-type Product = {
-  id: string;
-  title: string;
-  category: string;
-  brand: string;
-  description: string[];
-  preview_url: string[];
-  detail: string[];
-  skus: SKUS[];
-};
+import { PREADDITEM, Product } from '../../../lib/DefiningTypes';
 
-type PREADDITEM = {
-  typeSku: string;
-  count: number;
-};
 export default function ProductItemPage(props: { data: Product | null }) {
   const { data } = props;
   const productItem = data;

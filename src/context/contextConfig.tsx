@@ -1,35 +1,14 @@
 'use client';
 import { Dispatch, createContext, useReducer } from 'react';
+import {
+  InitialStateType,
+  Action,
+  Quantity,
+  DetailCart,
+  Cart,
+  Badge,
+} from '../lib/DefiningTypes';
 
-type InitialStateType = {
-  userProfile: any;
-  carts: Cart | null;
-  badgeCart: Badge;
-};
-type Action = {
-  payload: object;
-  type: string;
-};
-type Quantity = {
-  typeSku: string;
-  price: number;
-  count: number;
-};
-
-type DetailCart = {
-  productID: string;
-  title: string;
-  thumbnail: string;
-  quantity: any[];
-};
-
-type Cart = {
-  userID: string;
-  carts: DetailCart[];
-};
-type Badge = {
-  counts: number;
-};
 const initialState: InitialStateType = {
   userProfile: null,
   carts: null,

@@ -1,31 +1,12 @@
-import BannerPage from '@/components/banner/page';
+import BannerPage from '@/components/banner/BannerPage';
 import { database } from '../../firebase/firebaseConfig';
 
 import { ref, get } from 'firebase/database';
 import { Suspense } from 'react';
 import LoadingBanner from '@/components/banner/LoadingBanner';
 import LoadingNewArrivalPage from '@/components/products/new-arrival/LoadingNewArrival';
-import NewArrivalPage from '@/components/products/new-arrival/page';
-type Banner = {
-  id: string;
-  src: string;
-};
-type SKUS = {
-  type: string;
-  price: number;
-  count: number;
-  stock: number;
-};
-type Product = {
-  id: string;
-  title: string;
-  category: string;
-  brand: string;
-  description: string[];
-  preview_url: string[];
-  detail: string[];
-  skus: SKUS[];
-};
+import NewArrivalPage from '@/components/products/new-arrival/NewArrivalPage';
+import { Product, Banner } from '@/lib/DefiningTypes';
 
 async function getBanner() {
   const bannerRef = ref(database, 'banners');

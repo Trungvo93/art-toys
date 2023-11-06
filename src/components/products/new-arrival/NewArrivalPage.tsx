@@ -2,23 +2,8 @@
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { Product } from '../../../lib/DefiningTypes';
 
-type SKUS = {
-  type: string;
-  price: number;
-  count: number;
-  stock: number;
-};
-type Product = {
-  id: string;
-  title: string;
-  category: string;
-  brand: string;
-  description: string[];
-  preview_url: string[];
-  detail: string[];
-  skus: SKUS[];
-};
 export default function NewArrivalPage(props: { data: Product[] | null }) {
   const { data } = props;
   const reverseData = data?.slice(-8, data.length).reverse();

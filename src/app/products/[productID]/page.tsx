@@ -11,24 +11,10 @@ import {
 import { database } from '../../../../firebase/firebaseConfig';
 import { Suspense } from 'react';
 
-import ProductItemPage from '@/components/products/product/page';
+import ProductItemPage from '@/components/products/product/ProductItemPage';
 import { isArray } from '@nextui-org/shared-utils';
-type SKUS = {
-  type: string;
-  price: number;
-  count: number;
-  stock: number;
-};
-type Product = {
-  id: string;
-  title: string;
-  category: string;
-  brand: string;
-  description: string;
-  preview_url: string[];
-  detail: string[];
-  skus: SKUS[];
-};
+import { Product } from '@/lib/DefiningTypes';
+
 async function getProductItem(productID: string) {
   const productsRef = ref(database, 'products');
   const productQuery = query(

@@ -7,10 +7,8 @@ import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 
 import Image from 'next/image';
-type Banner = {
-  id: string;
-  src: string;
-};
+import { Banner } from '../../lib/DefiningTypes';
+
 export default function BannerPage(props: { data: Banner[] | null }) {
   const { data } = props;
 
