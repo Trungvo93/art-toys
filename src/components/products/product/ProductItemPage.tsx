@@ -31,7 +31,9 @@ export default function ProductItemPage(props: { data: Product | null }) {
   const productItem = data;
   const { state, dispatch } = useContext(AppContext);
 
+  //Slide thumbnails
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
+
   const [preAddItem, setPreAddItem] = useState<PREADDITEM>({
     typeSku: 'signle',
     count: 1,
@@ -50,71 +52,91 @@ export default function ProductItemPage(props: { data: Product | null }) {
   };
 
   const handleAddToCart = () => {
+    // Check if the product is already in the shopping cart
     const index = state.carts?.carts.findIndex(
-      (item) => item.productID === data?.id
+      (item) => item.productID === productItem?.id
     );
 
     const newData = { ...state.carts };
+
     if (index !== undefined && newData.carts) {
+      // If product is already
       if (index >= 0) {
         if (preAddItem.typeSku === 'signle') {
-          newData.carts[index].quantity[0]['count'] = preAddItem.count;
+          newData.carts[index].quantity[0]['count'] =
+            newData.carts[index].quantity[0]['count'] + preAddItem.count;
         } else {
-          newData.carts[index].quantity[1]['count'] = preAddItem.count;
+          newData.carts[index].quantity[1]['count'] =
+            newData.carts[index].quantity[1]['count'] + preAddItem.count;
         }
-      } else {
-        if (data?.id !== undefined) {
+      }
+      // If product add new
+      else {
+        if (productItem?.id !== undefined) {
           newData.carts.push({
-            productID: data?.id,
+            productID: productItem?.id,
             quantity: [
               {
                 count: preAddItem.typeSku === 'signle' ? preAddItem.count : 0,
-                price: data?.skus[0].price,
+                price: productItem?.skus[0].price,
                 typeSku: 'signle',
               },
               {
                 count: preAddItem.typeSku === 'set' ? preAddItem.count : 0,
-                price: data?.skus[1] ? data?.skus[1].price : 0,
+                price: productItem?.skus[1] ? productItem?.skus[1].price : 0,
                 typeSku: 'set',
               },
             ],
-            thumbnail: data?.preview_url[0],
-            title: data?.title,
+            thumbnail: productItem?.preview_url[0],
+            title: productItem?.title,
           });
         }
       }
     }
 
-    if (data?.id !== undefined) {
+    // Add cart to API
+    if (productItem?.id !== undefined) {
       const cartRef = ref(database, 'carts');
 
+      // Get dataCarts first
       get(cartRef)
         .then((snapshot) => {
           if (snapshot.exists()) {
+            // Check if the user is already in the shopping cart list
             const indexUID = snapshot.val().findIndex((item: any) => {
               if (item !== undefined) {
                 return item.userID === state.userProfile.uid;
               }
             });
-            if (indexUID >= 0) {
-              update(ref(database, `/carts/${indexUID}`), newData);
-            } else {
-              update(ref(database, `/carts/${snapshot.val().length}`), newData);
-            }
 
+            //Increase the number of badge
             let countItemCart = 0;
-
-            snapshot.val()[indexUID]?.carts.map((item: any) => {
+            snapshot.val()[indexUID]?.carts.map((item: any, index: number) => {
               if (item.quantity[0].count > 0) {
                 countItemCart++;
               }
               if (item.quantity[1].count > 0) {
                 countItemCart++;
               }
+              // if (
+              //   state.carts?.carts[index].quantity[0].count !==
+              //   item.quantity[0].count
+              // )
+              console.log(newData?.carts[index].quantity[0].count);
             });
+
+            if (indexUID >= 0) {
+              // If the user is already in the carts list -> update data
+              update(ref(database, `/carts/${indexUID}`), newData);
+            } else {
+              // If the user not in the carts list -> push new data
+              update(ref(database, `/carts/${snapshot.val().length}`), newData);
+              countItemCart++;
+            }
+
             dispatch({
               type: 'BADGE_UPDATE_SUCCESS',
-              payload: { counts: countItemCart + 1 },
+              payload: { counts: countItemCart },
             });
           } else {
             console.log('No data available');

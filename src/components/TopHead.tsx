@@ -45,30 +45,39 @@ export default function TopHeadPage() {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   useEffect(() => {
     onAuthStateChanged(auth, (account) => {
+      // If user is logged in
       if (account) {
         dispatch({ type: 'LOGIN_SUCCESS', payload: account });
-        const cartRef = ref(database, 'carts');
-        const cartQuery = query(
-          cartRef,
+
+        // Get data carts
+        const cartsRef = ref(database, 'carts');
+        const cartsQuery = query(
+          cartsRef,
           orderByChild('userID'),
           equalTo(account?.uid)
         );
 
-        get(cartQuery)
+        get(cartsQuery)
           .then((snapshot) => {
             let result: Cart | null = null;
+
+            //Convert data to Object data
             if (snapshot.exists()) {
               if (isArray(snapshot.val())) {
                 result = snapshot.val()?.filter((value: any) => value)[0];
               } else {
                 result = snapshot.val()[Object.keys(snapshot.val())[0]];
               }
+
+              // Dispatch carts of user to Context store
               if (result) {
                 dispatch({
                   type: 'CARTS_UPDATE_SUCCESS',
                   payload: result,
                 });
               }
+
+              // Calculate the number of products in the shopping cart
               let countItemCart = 0;
               result?.carts.map((item: any) => {
                 if (item.quantity[0].count > 0) {
@@ -95,6 +104,7 @@ export default function TopHeadPage() {
             console.error(error);
           });
       } else {
+        // If user is not logged in
         dispatch({ type: 'LOGOUT_SUCCESS', payload: {} });
         dispatch({ type: 'CARTS_REMOVE_SUCCESS', payload: {} });
         dispatch({

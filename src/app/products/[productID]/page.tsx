@@ -25,6 +25,7 @@ async function getProductItem(productID: string) {
   let result: Product | null = null;
   await get(productQuery)
     .then((snapshot) => {
+      //Convert data to Object data
       if (snapshot.exists()) {
         if (isArray(snapshot.val())) {
           result = snapshot.val()?.filter((value: Product) => value)[0];
