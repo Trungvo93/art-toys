@@ -118,11 +118,6 @@ export default function ProductItemPage(props: { data: Product | null }) {
               if (item.quantity[1].count > 0) {
                 countItemCart++;
               }
-              // if (
-              //   state.carts?.carts[index].quantity[0].count !==
-              //   item.quantity[0].count
-              // )
-              console.log(newData?.carts[index].quantity[0].count);
             });
 
             if (indexUID >= 0) {
