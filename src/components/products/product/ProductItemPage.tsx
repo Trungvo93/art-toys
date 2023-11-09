@@ -24,7 +24,7 @@ import {
   set,
 } from 'firebase/database';
 import { database } from '../../../../firebase/firebaseConfig';
-import { PREADDITEM, Product } from '../../../lib/DefiningTypes';
+import { Cart, PREADDITEM, Product } from '../../../lib/DefiningTypes';
 
 export default function ProductItemPage(props: { data: Product | null }) {
   const { data } = props;
@@ -51,96 +51,234 @@ export default function ProductItemPage(props: { data: Product | null }) {
     }
   };
 
-  const handleAddToCart = () => {
-    // Check if the product is already in the shopping cart
-    const index = state.carts?.carts.findIndex(
-      (item) => item.productID === productItem?.id
-    );
+  // const handleAddToCart = () => {
+  //   // Check if the product is already in the shopping cart
+  //   const index = state.carts?.carts.findIndex(
+  //     (item) => item.productID === productItem?.id
+  //   );
 
-    const newData = { ...state.carts };
+  //   const newData = { ...state.carts };
 
-    if (index !== undefined && newData.carts) {
-      // If product is already
-      if (index >= 0) {
-        if (preAddItem.typeSku === 'signle') {
-          newData.carts[index].quantity[0]['count'] =
-            newData.carts[index].quantity[0]['count'] + preAddItem.count;
-        } else {
-          newData.carts[index].quantity[1]['count'] =
-            newData.carts[index].quantity[1]['count'] + preAddItem.count;
-        }
-      }
-      // If product add new
-      else {
-        if (productItem?.id !== undefined) {
-          newData.carts.push({
-            productID: productItem?.id,
-            quantity: [
-              {
-                count: preAddItem.typeSku === 'signle' ? preAddItem.count : 0,
-                price: productItem?.skus[0].price,
-                typeSku: 'signle',
-              },
-              {
-                count: preAddItem.typeSku === 'set' ? preAddItem.count : 0,
-                price: productItem?.skus[1] ? productItem?.skus[1].price : 0,
-                typeSku: 'set',
-              },
-            ],
-            thumbnail: productItem?.preview_url[0],
-            title: productItem?.title,
-          });
-        }
-      }
-    }
+  //   if (index !== undefined && newData.carts) {
+  //     // If product is already
+  //     if (index >= 0) {
+  //       if (preAddItem.typeSku === 'signle') {
+  //         newData.carts[index].quantity[0]['count'] =
+  //           newData.carts[index].quantity[0]['count'] + preAddItem.count;
+  //       } else {
+  //         newData.carts[index].quantity[1]['count'] =
+  //           newData.carts[index].quantity[1]['count'] + preAddItem.count;
+  //       }
+  //     }
+  //     // If product add new
+  //     else {
+  //       if (productItem?.id !== undefined) {
+  //         newData.carts.push({
+  //           productID: productItem?.id,
+  //           quantity: [
+  //             {
+  //               count: preAddItem.typeSku === 'signle' ? preAddItem.count : 0,
+  //               price: productItem?.skus[0].price,
+  //               typeSku: 'signle',
+  //             },
+  //             {
+  //               count: preAddItem.typeSku === 'set' ? preAddItem.count : 0,
+  //               price: productItem?.skus[1] ? productItem?.skus[1].price : 0,
+  //               typeSku: 'set',
+  //             },
+  //           ],
+  //           thumbnail: productItem?.preview_url[0],
+  //           title: productItem?.title,
+  //         });
+  //       }
+  //     }
+  //   }
 
-    // Add cart to API
-    if (productItem?.id !== undefined) {
-      const cartRef = ref(database, 'carts');
+  //   // Add cart to API
+  //   if (productItem?.id !== undefined) {
+  //     const cartRef = ref(database, 'carts');
 
-      // Get dataCarts first
-      get(cartRef)
-        .then((snapshot) => {
-          if (snapshot.exists()) {
-            // Check if the user is already in the shopping cart list
-            const indexUID = snapshot.val().findIndex((item: any) => {
-              if (item !== undefined) {
-                return item.userID === state.userProfile.uid;
-              }
-            });
+  //     // Get dataCarts first
+  //     get(cartRef)
+  //       .then((snapshot) => {
+  //         if (snapshot.exists()) {
+  //           // Check if the user is already in the shopping cart list
+  //           const indexUID = snapshot.val().findIndex((item: any) => {
+  //             if (item !== undefined) {
+  //               return item.userID === state.userProfile.uid;
+  //             }
+  //           });
 
-            //Increase the number of badge
-            let countItemCart = 0;
-            snapshot.val()[indexUID]?.carts.map((item: any, index: number) => {
-              if (item.quantity[0].count > 0) {
-                countItemCart++;
-              }
-              if (item.quantity[1].count > 0) {
-                countItemCart++;
-              }
-            });
+  //           //Increase the number of badge
+  //           let countItemCart = 0;
+  //           snapshot.val()[indexUID]?.carts.map((item: any, index: number) => {
+  //             if (item.quantity[0].count > 0) {
+  //               countItemCart++;
+  //             }
+  //             if (item.quantity[1].count > 0) {
+  //               countItemCart++;
+  //             }
+  //           });
 
-            if (indexUID >= 0) {
-              // If the user is already in the carts list -> update data
-              update(ref(database, `/carts/${indexUID}`), newData);
+  //           if (indexUID >= 0) {
+  //             // If the user is already in the carts list -> update data
+  //             update(ref(database, `/carts/${indexUID}`), newData);
+  //           } else {
+  //             // If the user not in the carts list -> push new data
+  //             update(ref(database, `/carts/${snapshot.val().length}`), newData);
+  //             countItemCart++;
+  //           }
+
+  //           dispatch({
+  //             type: 'BADGE_UPDATE_SUCCESS',
+  //             payload: { counts: countItemCart },
+  //           });
+  //         } else {
+  //           console.log('No data available');
+  //         }
+  //       })
+  //       .catch((error) => {
+  //         console.error(error);
+  //       });
+  //   }
+
+  // };
+
+  const handleAddToCart = async () => {
+    const cartsRef = ref(database, 'carts');
+    await get(
+      query(cartsRef, orderByChild('userID'), equalTo(state.userProfile.uid))
+    )
+      .then((snapshot) => {
+        // If user have carts already
+        if (snapshot.exists()) {
+          const dataCart = Object.values(snapshot.val())[0] as Cart;
+          const keyCart = Object.keys(snapshot.val());
+
+          const newCart: Cart = { ...dataCart };
+          const indexProductInListCarts = newCart.carts.findIndex(
+            (item) => productItem?.id === item.productID
+          );
+          console.log('newCart: ', newCart);
+          if (indexProductInListCarts < 0) {
+            // Typescript validation
+            if (productItem) {
+              newCart.carts.push({
+                productID: productItem?.id,
+                thumbnail: productItem.preview_url[0],
+                title: productItem.title,
+                quantity: [
+                  {
+                    count:
+                      preAddItem.typeSku === 'signle' ? preAddItem.count : 0,
+                    price: productItem.skus[0].price,
+                    typeSku: 'signle',
+                  },
+                  {
+                    count: preAddItem.typeSku === 'set' ? preAddItem.count : 0,
+                    price: productItem.skus[1]
+                      ? productItem.skus[1].price
+                      : productItem.skus[0].price,
+                    typeSku: 'set',
+                  },
+                ],
+              });
+            }
+          } else {
+            if (preAddItem.typeSku === 'signle') {
+              newCart.carts[indexProductInListCarts].quantity[0].count =
+                newCart.carts[indexProductInListCarts].quantity[0].count +
+                preAddItem.count;
             } else {
-              // If the user not in the carts list -> push new data
-              update(ref(database, `/carts/${snapshot.val().length}`), newData);
+              newCart.carts[indexProductInListCarts].quantity[1].count =
+                newCart.carts[indexProductInListCarts].quantity[1].count +
+                preAddItem.count;
+            }
+          }
+
+          // Put item to list carts of user
+          update(ref(database, `/carts/${keyCart}`), newCart);
+
+          //Update item to Badge Carts
+          let countItemCart = 0;
+          newCart?.carts.map((item: any) => {
+            if (item.quantity[0].count > 0) {
               countItemCart++;
             }
+            if (item.quantity[1].count > 0) {
+              countItemCart++;
+            }
+          });
+          dispatch({
+            type: 'CARTS_UPDATE_SUCCESS',
+            payload: newCart,
+          });
+          dispatch({
+            type: 'BADGE_UPDATE_SUCCESS',
+            payload: { counts: countItemCart },
+          });
+        } else {
+          // User not have list carts
+          set(push(ref(database, 'carts')), {
+            userID: state.userProfile.uid,
+            carts: [
+              {
+                productID: productItem?.id,
+                title: productItem?.title,
+                thumbnail: productItem?.preview_url[0],
+                quantity: [
+                  {
+                    count:
+                      preAddItem.typeSku === 'signle' ? preAddItem.count : 0,
+                    price: productItem?.skus[0].price,
+                    typeSku: 'signle',
+                  },
+                  {
+                    count: preAddItem.typeSku === 'set' ? preAddItem.count : 0,
+                    price: productItem?.skus[1].price,
+                    typeSku: 'set',
+                  },
+                ],
+              },
+            ],
+          });
 
-            dispatch({
-              type: 'BADGE_UPDATE_SUCCESS',
-              payload: { counts: countItemCart },
-            });
-          } else {
-            console.log('No data available');
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    }
+          dispatch({
+            type: 'CARTS_UPDATE_SUCCESS',
+            payload: {
+              userID: state.userProfile.uid,
+              carts: [
+                {
+                  productID: productItem?.id,
+                  title: productItem?.title,
+                  thumbnail: productItem?.preview_url[0],
+                  quantity: [
+                    {
+                      count:
+                        preAddItem.typeSku === 'signle' ? preAddItem.count : 0,
+                      price: productItem?.skus[0].price,
+                      typeSku: 'signle',
+                    },
+                    {
+                      count:
+                        preAddItem.typeSku === 'set' ? preAddItem.count : 0,
+                      price: productItem?.skus[1].price,
+                      typeSku: 'set',
+                    },
+                  ],
+                },
+              ],
+            },
+          });
+          dispatch({
+            type: 'BADGE_UPDATE_SUCCESS',
+            payload: { counts: 1 },
+          });
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
   return (
     <div className='mt-8 xl:mx-64 lg:mx-52  sm:mx-8 mx-4'>

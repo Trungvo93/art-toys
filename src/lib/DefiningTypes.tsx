@@ -12,12 +12,16 @@ export type Quantity = {
   price: number;
   count: number;
 };
-
+export type QuantityDetailCart = {
+  count: number;
+  price: number;
+  typeSku: string;
+};
 export type DetailCart = {
   productID: string;
   title: string;
   thumbnail: string;
-  quantity: any[];
+  quantity: QuantityDetailCart[];
 };
 
 export type Cart = {
