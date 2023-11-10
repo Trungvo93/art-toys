@@ -37,10 +37,14 @@ export default function CartsPage() {
 
           if (e.typeSku === 'signle') {
             newCart.carts[index].quantity[0].count =
-              newCart.carts[index].quantity[0].count - 1;
+              newCart.carts[index].quantity[0].count >= 1
+                ? newCart.carts[index].quantity[0].count - 1
+                : 0;
           } else {
             newCart.carts[index].quantity[1].count =
-              newCart.carts[index].quantity[1].count - 1;
+              newCart.carts[index].quantity[1].count >= 1
+                ? newCart.carts[index].quantity[1].count - 1
+                : 0;
           }
           console.log('newCart: ', newCart);
 
