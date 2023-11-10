@@ -43,6 +43,7 @@ export default function TopHeadPage() {
   const { state, dispatch } = useContext(AppContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [totalMoney, setTotalMoney] = useState<number>(0);
   useEffect(() => {
     onAuthStateChanged(auth, (account) => {
       // If user is logged in
@@ -79,14 +80,15 @@ export default function TopHeadPage() {
 
               // Calculate the number of products in the shopping cart
               let countItemCart = 0;
-              result?.carts.map((item: any) => {
-                if (item.quantity[0].count > 0) {
-                  countItemCart++;
-                }
-                if (item.quantity[1].count > 0) {
-                  countItemCart++;
-                }
-              });
+              result?.carts &&
+                result?.carts.map((item: any) => {
+                  if (item.quantity[0].count > 0) {
+                    countItemCart++;
+                  }
+                  if (item.quantity[1].count > 0) {
+                    countItemCart++;
+                  }
+                });
               dispatch({
                 type: 'BADGE_UPDATE_SUCCESS',
                 payload: { counts: countItemCart },
@@ -114,6 +116,19 @@ export default function TopHeadPage() {
       }
     });
   }, []);
+
+  useEffect(() => {
+    let tempMoney = 0;
+    if (state.carts?.carts) {
+      state.carts?.carts.map((item) => {
+        tempMoney =
+          tempMoney +
+          item.quantity[0].count * item.quantity[0].price +
+          item.quantity[1].count * item.quantity[1].price;
+      });
+    }
+    setTotalMoney(tempMoney);
+  }, [state.carts]);
   return (
     <Navbar
       isMenuOpen={isMenuOpen}
@@ -333,11 +348,28 @@ export default function TopHeadPage() {
             </Button>
           </PopoverTrigger>
           <PopoverContent>
-            <div className='px-1 py-2 max-h-[500px] overflow-auto'>
+            <div className='px-1 py-2 '>
               <div className='text-small font-bold'>
-                {state.carts ? 'Giỏ hàng của bạn' : 'Đăng nhập để xem giỏ hàng'}
+                {state.userProfile
+                  ? 'Giỏ hàng của bạn'
+                  : 'Đăng nhập để xem giỏ hàng'}
               </div>
-              <CartsPage />
+              {state.carts?.carts && <CartsPage />}
+              <div
+                className={`${
+                  state.carts ? 'block' : 'hidden'
+                } text-small font-bold text-default-red flex gap-2 ${
+                  totalMoney > 0 ? 'block' : 'hidden'
+                }`}>
+                <span>Thành tiền:</span>
+                <span className={``}>
+                  {totalMoney
+                    .toString()
+                    .replace(/[^-\d.]/g, '')
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  đ
+                </span>
+              </div>
             </div>
           </PopoverContent>
         </Popover>

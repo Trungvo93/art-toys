@@ -51,99 +51,6 @@ export default function ProductItemPage(props: { data: Product | null }) {
     }
   };
 
-  // const handleAddToCart = () => {
-  //   // Check if the product is already in the shopping cart
-  //   const index = state.carts?.carts.findIndex(
-  //     (item) => item.productID === productItem?.id
-  //   );
-
-  //   const newData = { ...state.carts };
-
-  //   if (index !== undefined && newData.carts) {
-  //     // If product is already
-  //     if (index >= 0) {
-  //       if (preAddItem.typeSku === 'signle') {
-  //         newData.carts[index].quantity[0]['count'] =
-  //           newData.carts[index].quantity[0]['count'] + preAddItem.count;
-  //       } else {
-  //         newData.carts[index].quantity[1]['count'] =
-  //           newData.carts[index].quantity[1]['count'] + preAddItem.count;
-  //       }
-  //     }
-  //     // If product add new
-  //     else {
-  //       if (productItem?.id !== undefined) {
-  //         newData.carts.push({
-  //           productID: productItem?.id,
-  //           quantity: [
-  //             {
-  //               count: preAddItem.typeSku === 'signle' ? preAddItem.count : 0,
-  //               price: productItem?.skus[0].price,
-  //               typeSku: 'signle',
-  //             },
-  //             {
-  //               count: preAddItem.typeSku === 'set' ? preAddItem.count : 0,
-  //               price: productItem?.skus[1] ? productItem?.skus[1].price : 0,
-  //               typeSku: 'set',
-  //             },
-  //           ],
-  //           thumbnail: productItem?.preview_url[0],
-  //           title: productItem?.title,
-  //         });
-  //       }
-  //     }
-  //   }
-
-  //   // Add cart to API
-  //   if (productItem?.id !== undefined) {
-  //     const cartRef = ref(database, 'carts');
-
-  //     // Get dataCarts first
-  //     get(cartRef)
-  //       .then((snapshot) => {
-  //         if (snapshot.exists()) {
-  //           // Check if the user is already in the shopping cart list
-  //           const indexUID = snapshot.val().findIndex((item: any) => {
-  //             if (item !== undefined) {
-  //               return item.userID === state.userProfile.uid;
-  //             }
-  //           });
-
-  //           //Increase the number of badge
-  //           let countItemCart = 0;
-  //           snapshot.val()[indexUID]?.carts.map((item: any, index: number) => {
-  //             if (item.quantity[0].count > 0) {
-  //               countItemCart++;
-  //             }
-  //             if (item.quantity[1].count > 0) {
-  //               countItemCart++;
-  //             }
-  //           });
-
-  //           if (indexUID >= 0) {
-  //             // If the user is already in the carts list -> update data
-  //             update(ref(database, `/carts/${indexUID}`), newData);
-  //           } else {
-  //             // If the user not in the carts list -> push new data
-  //             update(ref(database, `/carts/${snapshot.val().length}`), newData);
-  //             countItemCart++;
-  //           }
-
-  //           dispatch({
-  //             type: 'BADGE_UPDATE_SUCCESS',
-  //             payload: { counts: countItemCart },
-  //           });
-  //         } else {
-  //           console.log('No data available');
-  //         }
-  //       })
-  //       .catch((error) => {
-  //         console.error(error);
-  //       });
-  //   }
-
-  // };
-
   const handleAddToCart = async () => {
     const cartsRef = ref(database, 'carts');
     await get(
@@ -156,34 +63,31 @@ export default function ProductItemPage(props: { data: Product | null }) {
           const keyCart = Object.keys(snapshot.val());
 
           const newCart: Cart = { ...dataCart };
-          const indexProductInListCarts = newCart.carts.findIndex(
-            (item) => productItem?.id === item.productID
-          );
-          console.log('newCart: ', newCart);
-          if (indexProductInListCarts < 0) {
-            // Typescript validation
-            if (productItem) {
-              newCart.carts.push({
-                productID: productItem?.id,
-                thumbnail: productItem.preview_url[0],
-                title: productItem.title,
-                quantity: [
-                  {
-                    count:
-                      preAddItem.typeSku === 'signle' ? preAddItem.count : 0,
-                    price: productItem.skus[0].price,
-                    typeSku: 'signle',
-                  },
-                  {
-                    count: preAddItem.typeSku === 'set' ? preAddItem.count : 0,
-                    price: productItem.skus[1]
-                      ? productItem.skus[1].price
-                      : productItem.skus[0].price,
-                    typeSku: 'set',
-                  },
-                ],
-              });
-            }
+          const indexProductInListCarts = newCart.carts
+            ? newCart.carts.findIndex(
+                (item) => productItem?.id === item.productID
+              )
+            : -1;
+          if (indexProductInListCarts < 0 && productItem) {
+            newCart.carts.push({
+              productID: productItem?.id,
+              thumbnail: productItem.preview_url[0],
+              title: productItem.title,
+              quantity: [
+                {
+                  count: preAddItem.typeSku === 'signle' ? preAddItem.count : 0,
+                  price: productItem.skus[0].price,
+                  typeSku: 'signle',
+                },
+                {
+                  count: preAddItem.typeSku === 'set' ? preAddItem.count : 0,
+                  price: productItem.skus[1]
+                    ? productItem.skus[1].price
+                    : productItem.skus[0].price,
+                  typeSku: 'set',
+                },
+              ],
+            });
           } else {
             if (preAddItem.typeSku === 'signle') {
               newCart.carts[indexProductInListCarts].quantity[0].count =
@@ -353,16 +257,18 @@ export default function ProductItemPage(props: { data: Product | null }) {
 
           {/* Type Box */}
           <div className='flex gap-4'>
-            <Button
-              radius='none'
-              color='danger'
-              variant={preAddItem.typeSku === 'signle' ? 'solid' : 'ghost'}
-              onClick={() => {
-                handleChangeTypeSku('signle');
-              }}>
-              Hộp đơn
-            </Button>
-            {productItem?.skus[1] && (
+            {productItem && productItem?.skus[0].count > 0 && (
+              <Button
+                radius='none'
+                color='danger'
+                variant={preAddItem.typeSku === 'signle' ? 'solid' : 'ghost'}
+                onClick={() => {
+                  handleChangeTypeSku('signle');
+                }}>
+                Hộp đơn
+              </Button>
+            )}
+            {productItem && productItem?.skus[1].count > 0 && (
               <Button
                 radius='none'
                 color='danger'

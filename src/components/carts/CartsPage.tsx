@@ -15,6 +15,7 @@ import {
   push,
   update,
   set,
+  remove,
 } from 'firebase/database';
 import { database } from '../../../firebase/firebaseConfig';
 export default function CartsPage() {
@@ -46,29 +47,45 @@ export default function CartsPage() {
                 ? newCart.carts[index].quantity[1].count - 1
                 : 0;
           }
-          console.log('newCart: ', newCart);
-
-          // Put item to list carts of user
-          update(ref(database, `/carts/${keyCart}`), newCart);
-
-          //Update item to Badge Carts
-          let countItemCart = 0;
-          newCart?.carts.map((item: any) => {
-            if (item.quantity[0].count > 0) {
-              countItemCart++;
-            }
-            if (item.quantity[1].count > 0) {
-              countItemCart++;
+          newCart.carts.map((item, index) => {
+            if (item.quantity[0].count === 0 && item.quantity[1].count === 0) {
+              newCart.carts.splice(index, 1);
             }
           });
-          dispatch({
-            type: 'CARTS_UPDATE_SUCCESS',
-            payload: newCart,
-          });
-          dispatch({
-            type: 'BADGE_UPDATE_SUCCESS',
-            payload: { counts: countItemCart },
-          });
+          console.log('newCartBadge: ', newCart);
+          if (newCart.carts.length > 0) {
+            // Put item to list carts of user
+            update(ref(database, `/carts/${keyCart}`), newCart);
+
+            //Update item to Badge Carts
+            let countItemCart = 0;
+            newCart?.carts.map((item: any) => {
+              if (item.quantity[0].count > 0) {
+                countItemCart++;
+              }
+              if (item.quantity[1].count > 0) {
+                countItemCart++;
+              }
+            });
+            dispatch({
+              type: 'CARTS_UPDATE_SUCCESS',
+              payload: newCart,
+            });
+            dispatch({
+              type: 'BADGE_UPDATE_SUCCESS',
+              payload: { counts: countItemCart },
+            });
+          } else {
+            remove(ref(database, `/carts/${keyCart}`));
+            dispatch({
+              type: 'CARTS_REMOVE_SUCCESS',
+              payload: {},
+            });
+            dispatch({
+              type: 'BADGE_UPDATE_SUCCESS',
+              payload: { counts: 0 },
+            });
+          }
         } else {
           console.log('Not item available');
         }
@@ -78,40 +95,39 @@ export default function CartsPage() {
       });
   };
   return (
-    <div className='grid gap-4 mt-2'>
+    <div className='grid gap-4 my-2 max-h-[500px] overflow-auto'>
       {state.carts?.carts.map((item, index) => {
-        return item.quantity.map((e) => {
-          if (e.count > 0)
-            return (
-              <div
-                key={index}
-                className='flex gap-4'>
-                <Image
-                  src={item.thumbnail}
-                  alt={item.title}
-                  width={1000}
-                  height={1000}
-                  className='aspect-square w-24 '
-                />
-                <div className='grid gap-2'>
-                  <p>{item.title}</p>
-                  <p className='text-default-red'>
-                    {e.typeSku === 'signle' ? 'Hộp' : 'Set'}
-                  </p>
-                  <div className='flex gap-4 items-center'>
-                    <button
-                      className={` h-8 w-8 border `}
-                      onClick={() => {
-                        handleDecreaseQuantity(e, index);
-                      }}>
-                      -
-                    </button>
-                    <span>{e.count}</span>
-                    <button className=' h-8 w-8 border '>+</button>
-                  </div>
+        return item.quantity.map((e, index2) => {
+          return (
+            <div
+              key={index2}
+              className={`flex gap-4 ${e.count <= 0 ? 'hidden' : 'block'}`}>
+              <Image
+                src={item.thumbnail}
+                alt={item.title}
+                width={1000}
+                height={1000}
+                className='aspect-square w-24 '
+              />
+              <div className='grid gap-2'>
+                <p>{item.title}</p>
+                <p className='text-default-red'>
+                  {e.typeSku === 'signle' ? 'Hộp' : 'Set'}
+                </p>
+                <div className='flex gap-4 items-center'>
+                  <button
+                    className={` h-8 w-8 border `}
+                    onClick={() => {
+                      handleDecreaseQuantity(e, index);
+                    }}>
+                    -
+                  </button>
+                  <span>{e.count}</span>
+                  <button className=' h-8 w-8 border '>+</button>
                 </div>
               </div>
-            );
+            </div>
+          );
         });
       })}
     </div>
