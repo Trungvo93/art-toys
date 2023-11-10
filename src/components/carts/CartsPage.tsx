@@ -23,16 +23,6 @@ export default function CartsPage() {
     e: QuantityDetailCart,
     index: number
   ) => {
-    // const newData = { ...state.carts };
-    // if (newData.carts !== undefined) {
-    //   if (e.typeSku === 'signle') {
-    //     newData.carts[index].quantity[0].count = newData.carts[index]
-    //       .quantity[0].count--;
-    //   } else {
-    //     newData.carts[index].quantity[1].count = newData.carts[index]
-    //       .quantity[1].count--;
-    //   }
-    // }
     const cartsRef = ref(database, 'carts');
     await get(
       query(cartsRef, orderByChild('userID'), equalTo(state.userProfile.uid))
@@ -44,7 +34,6 @@ export default function CartsPage() {
           const keyCart = Object.keys(snapshot.val());
 
           const newCart: Cart = { ...dataCart };
-          console.log('newCart: ', newCart);
 
           if (e.typeSku === 'signle') {
             newCart.carts[index].quantity[0].count = newCart.carts[index]
@@ -53,6 +42,8 @@ export default function CartsPage() {
             newCart.carts[index].quantity[1].count = newCart.carts[index]
               .quantity[1].count--;
           }
+          console.log('newCart: ', newCart);
+
           // Put item to list carts of user
           update(ref(database, `/carts/${keyCart}`), newCart);
 
