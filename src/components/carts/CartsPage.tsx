@@ -6,13 +6,14 @@ import { useState, useEffect, useContext } from 'react';
 
 export default function CartsPage() {
   const { state, dispatch } = useContext(AppContext);
-  const handleDecreaseQuantity = (e: QuantityDetailCart) => {
+  const handleDecreaseQuantity = (e: QuantityDetailCart, index: number) => {
     console.log(e);
+    console.log(index);
   };
   return (
     <div className='grid gap-4 mt-2'>
-      {state.carts?.carts.map((item) => {
-        return item.quantity.map((e, index) => {
+      {state.carts?.carts.map((item, index) => {
+        return item.quantity.map((e) => {
           if (e.count > 0)
             return (
               <div
@@ -34,7 +35,7 @@ export default function CartsPage() {
                     <button
                       className={` h-8 w-8 border `}
                       onClick={() => {
-                        handleDecreaseQuantity(e);
+                        handleDecreaseQuantity(e, index);
                       }}>
                       -
                     </button>
