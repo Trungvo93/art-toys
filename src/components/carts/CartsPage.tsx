@@ -36,11 +36,11 @@ export default function CartsPage() {
           const newCart: Cart = { ...dataCart };
 
           if (e.typeSku === 'signle') {
-            newCart.carts[index].quantity[0].count = newCart.carts[index]
-              .quantity[0].count--;
+            newCart.carts[index].quantity[0].count =
+              newCart.carts[index].quantity[0].count - 1;
           } else {
-            newCart.carts[index].quantity[1].count = newCart.carts[index]
-              .quantity[1].count--;
+            newCart.carts[index].quantity[1].count =
+              newCart.carts[index].quantity[1].count - 1;
           }
           console.log('newCart: ', newCart);
 
