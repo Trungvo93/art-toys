@@ -1,13 +1,13 @@
 'use client';
 import { AppContext } from '@/context/contextConfig';
-import { DetailCart } from '@/lib/DefiningTypes';
+import { DetailCart, QuantityDetailCart } from '@/lib/DefiningTypes';
 import Image from 'next/image';
 import { useState, useEffect, useContext } from 'react';
 
 export default function CartsPage() {
   const { state, dispatch } = useContext(AppContext);
-  const handleDecreaseQuantity = (item: DetailCart) => {
-    console.log(item);
+  const handleDecreaseQuantity = (e: QuantityDetailCart) => {
+    console.log(e);
   };
   return (
     <div className='grid gap-4 mt-2'>
@@ -34,7 +34,7 @@ export default function CartsPage() {
                     <button
                       className={` h-8 w-8 border `}
                       onClick={() => {
-                        handleDecreaseQuantity(item);
+                        handleDecreaseQuantity(e);
                       }}>
                       -
                     </button>
