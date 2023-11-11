@@ -28,6 +28,9 @@ export default function UserProfilePage() {
   const handleGotoLoginPage = () => {
     router.push('/login');
   };
+  const handleGotoRegister = () => {
+    router.push('/register');
+  };
   const handleEdit = () => {
     setIsEdit(!isEdit);
   };
@@ -50,10 +53,20 @@ export default function UserProfilePage() {
           <Button
             className='sm:w-auto w-full'
             color='danger'
+            variant='solid'
             onClick={() => {
               handleGotoLoginPage();
             }}>
             Đăng nhập tài khoản
+          </Button>
+          <Button
+            className='sm:w-auto w-full'
+            color='danger'
+            variant='solid'
+            onClick={() => {
+              handleGotoRegister();
+            }}>
+            Đăng ký tài khoản mới
           </Button>
           <Button
             className='sm:w-auto w-full'

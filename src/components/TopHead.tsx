@@ -313,10 +313,10 @@ export default function TopHeadPage() {
                 <LoginWithEmailPage />
                 <div>
                   <p className='text-center'>
-                    Khách hàng mới?
+                    <span> Khách hàng mới?</span>
                     <Link
                       href={'/register'}
-                      className='text-red-600'
+                      className='text-red-600 ms-2'
                       onClick={() => {
                         setIsLoginOpen(false);
                       }}>
