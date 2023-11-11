@@ -37,10 +37,24 @@ input[type='email'],
 input[type='url'],
 input[type='search'],
 input[type='tel'],
-input[type='color'] {
+input[type='color'],
+input,
+input:focus {
   font-size: 16px;
 }
 
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  select,
+  textarea,
+  input {
+    font-size: 16px;
+  }
+  select:focus,
+  textarea:focus,
+  input:focus {
+    font-size: 16px;
+  }
+}
 @layer base {
   input[type='number']::-webkit-outer-spin-button,
   input[type='number']::-webkit-inner-spin-button,

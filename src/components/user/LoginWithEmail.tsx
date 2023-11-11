@@ -89,7 +89,8 @@ export default function LoginWithEmailPage() {
           placeholder='Email'
           size='sm'
           startContent={<i className='bi bi-envelope-at text-xl'></i>}
-          type='string'
+          type='email'
+          inputMode='email'
           isInvalid={isInvalidEmail}
           color={isInvalidEmail ? 'danger' : 'default'}
           errorMessage={isInvalidEmail && 'Email không đúng định dạng'}

@@ -114,6 +114,7 @@ export default function EditProfilePage({ toggleFunction }: Props) {
           color={isInvalidEmail ? 'danger' : 'default'}
           label='Email'
           type='email'
+          inputMode='email'
           className='w-full'
         />
         <Button
