@@ -61,8 +61,8 @@ export default function UserProfilePage() {
           </Button>
           <Button
             className='sm:w-auto w-full'
-            color='danger'
-            variant='solid'
+            color='success'
+            variant='ghost'
             onClick={() => {
               handleGotoRegister();
             }}>
