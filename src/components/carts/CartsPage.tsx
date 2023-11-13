@@ -95,7 +95,7 @@ export default function CartsPage() {
       });
   };
   return (
-    <div className='grid gap-4 my-2 max-h-[500px] overflow-auto'>
+    <div className='grid gap-4 my-2 sm:max-h-[500px] w-full  md:overflow-auto overflow-y-scroll '>
       {state.carts?.carts.map((item, index) => {
         return item.quantity.map((e, index2) => {
           return (
