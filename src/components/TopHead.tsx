@@ -17,6 +17,7 @@ import {
   Input,
   Accordion,
   AccordionItem,
+  Divider,
 } from '@nextui-org/react';
 import { useState, useEffect, useContext } from 'react';
 import Link from 'next/link';
@@ -38,12 +39,12 @@ import { AppContext } from '@/context/contextConfig';
 import CartsPage from './carts/CartsPage';
 import { isArray } from '@nextui-org/shared-utils';
 import { Cart } from '../lib/DefiningTypes';
+import TotalPricePreviewPage from './carts/TotalPricePreview';
 
 export default function TopHeadPage() {
   const { state, dispatch } = useContext(AppContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
-  const [totalMoney, setTotalMoney] = useState<number>(0);
   useEffect(() => {
     onAuthStateChanged(auth, (account) => {
       // If user is logged in
@@ -69,6 +70,11 @@ export default function TopHeadPage() {
               } else {
                 result = snapshot.val()[Object.keys(snapshot.val())[0]];
               }
+              console.log('result: ', result);
+              const dataCart = Object.values(snapshot.val())[0] as Cart;
+              const keyCart = Object.keys(snapshot.val());
+              console.log('dataCart: ', dataCart);
+              console.log('keyCart: ', keyCart);
 
               // Dispatch carts of user to Context store
               if (result) {
@@ -117,18 +123,6 @@ export default function TopHeadPage() {
     });
   }, []);
 
-  useEffect(() => {
-    let tempMoney = 0;
-    if (state.carts?.carts) {
-      state.carts?.carts.map((item) => {
-        tempMoney =
-          tempMoney +
-          item.quantity[0].count * item.quantity[0].price +
-          item.quantity[1].count * item.quantity[1].price;
-      });
-    }
-    setTotalMoney(tempMoney);
-  }, [state.carts]);
   return (
     <Navbar
       isMenuOpen={isMenuOpen}
@@ -347,29 +341,21 @@ export default function TopHeadPage() {
               </Badge>
             </Button>
           </PopoverTrigger>
-          <PopoverContent>
+          <PopoverContent className=''>
             <div className='px-1 py-2 '>
               <div className='text-small font-bold'>
                 {state.userProfile
                   ? 'Giỏ hàng của bạn'
                   : 'Đăng nhập để xem giỏ hàng'}
               </div>
-              {state.carts?.carts && <CartsPage />}
-              <div
-                className={`${
-                  state.carts ? 'block' : 'hidden'
-                } text-small font-bold text-default-red flex gap-2 ${
-                  totalMoney > 0 ? 'block' : 'hidden'
-                }`}>
-                <span>Thành tiền:</span>
-                <span className={``}>
-                  {totalMoney
-                    .toString()
-                    .replace(/[^-\d.]/g, '')
-                    .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                  đ
-                </span>
-              </div>
+              {state.carts?.carts && (
+                <div>
+                  <Divider className='my-4' />
+                  <CartsPage />
+                  <Divider className='my-4' />
+                  <TotalPricePreviewPage />
+                </div>
+              )}
             </div>
           </PopoverContent>
         </Popover>
