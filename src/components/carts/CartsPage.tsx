@@ -20,6 +20,19 @@ import {
 import { database } from '../../../firebase/firebaseConfig';
 export default function CartsPage() {
   const { state, dispatch } = useContext(AppContext);
+  const [totalMoney, setTotalMoney] = useState<number>(0);
+  useEffect(() => {
+    let tempMoney = 0;
+    if (state.carts?.carts) {
+      state.carts?.carts.map((item) => {
+        tempMoney =
+          tempMoney +
+          item.quantity[0].count * item.quantity[0].price +
+          item.quantity[1].count * item.quantity[1].price;
+      });
+    }
+    setTotalMoney(tempMoney);
+  }, [state.carts]);
   const handleDecreaseQuantity = async (
     e: QuantityDetailCart,
     index: number
@@ -95,7 +108,7 @@ export default function CartsPage() {
       });
   };
   return (
-    <div className='grid gap-4 my-2 sm:max-h-[500px] w-full  md:overflow-auto overflow-y-scroll '>
+    <div className='grid gap-4 my-2 sm:max-h-[500px] w-screen  md:overflow-auto overflow-y-scroll '>
       {state.carts?.carts.map((item, index) => {
         return item.quantity.map((e, index2) => {
           return (
@@ -130,6 +143,21 @@ export default function CartsPage() {
           );
         });
       })}
+      <div
+        className={`${
+          state.carts ? 'block' : 'hidden'
+        } text-small font-bold text-default-red flex gap-2 ${
+          totalMoney > 0 ? 'block' : 'hidden'
+        }`}>
+        <span>Thành tiền:</span>
+        <span className={``}>
+          {totalMoney
+            .toString()
+            .replace(/[^-\d.]/g, '')
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+          đ
+        </span>
+      </div>
     </div>
   );
 }
