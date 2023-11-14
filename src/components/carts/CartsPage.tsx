@@ -153,7 +153,7 @@ export default function CartsPage() {
       });
   };
   return (
-    <div className='grid gap-4 my-2 pe-4 max-h-[250px]   md:overflow-auto overflow-y-scroll '>
+    <div className='grid gap-4 my-2 pe-4 max-h-[250px]   overscroll-contain overflow-y-scroll '>
       {state.carts?.carts.map((item, index) => {
         return item.quantity.map((e, index2) => {
           return (
