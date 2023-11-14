@@ -40,7 +40,7 @@ import CartsPage from './carts/CartsPage';
 import { isArray } from '@nextui-org/shared-utils';
 import { Cart } from '../lib/DefiningTypes';
 import TotalPricePreviewPage from './carts/TotalPricePreview';
-
+import { usePathname } from 'next/navigation';
 export default function TopHeadPage() {
   const { state, dispatch } = useContext(AppContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -65,29 +65,34 @@ export default function TopHeadPage() {
 
             //Convert data to Object data
             if (snapshot.exists()) {
-              if (isArray(snapshot.val())) {
-                result = snapshot.val()?.filter((value: any) => value)[0];
-              } else {
-                result = snapshot.val()[Object.keys(snapshot.val())[0]];
-              }
-              console.log('result: ', result);
+              // if (isArray(snapshot.val())) {
+              //   result = snapshot.val()?.filter((value: any) => value)[0];
+              // } else {
+              //   result = snapshot.val()[Object.keys(snapshot.val())[0]];
+              // }
               const dataCart = Object.values(snapshot.val())[0] as Cart;
               const keyCart = Object.keys(snapshot.val());
-              console.log('dataCart: ', dataCart);
-              console.log('keyCart: ', keyCart);
 
               // Dispatch carts of user to Context store
-              if (result) {
-                dispatch({
-                  type: 'CARTS_UPDATE_SUCCESS',
-                  payload: result,
-                });
-              }
+              dispatch({
+                type: 'CARTS_UPDATE_SUCCESS',
+                payload: dataCart,
+              });
+              dispatch({
+                type: 'KEYCART_UPDATE_SUCCESS',
+                payload: keyCart,
+              });
+              // if (result) {
+              //   dispatch({
+              //     type: 'CARTS_UPDATE_SUCCESS',
+              //     payload: result,
+              //   });
+              // }
 
               // Calculate the number of products in the shopping cart
               let countItemCart = 0;
-              result?.carts &&
-                result?.carts.map((item: any) => {
+              dataCart?.carts &&
+                dataCart?.carts.map((item: any) => {
                   if (item.quantity[0].count > 0) {
                     countItemCart++;
                   }

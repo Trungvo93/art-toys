@@ -13,6 +13,7 @@ const initialState: InitialStateType = {
   userProfile: null,
   carts: null,
   badgeCart: { counts: 0 },
+  keyCart: null,
 };
 const reducer = (state: any, action: Action) => {
   const { payload, type } = action;
@@ -26,7 +27,9 @@ const reducer = (state: any, action: Action) => {
     case 'CARTS_UPDATE_SUCCESS':
       return { ...state, carts: { ...payload } };
     case 'CARTS_REMOVE_SUCCESS':
-      return { ...state, carts: null };
+      return { ...state, carts: null, keyCart: null };
+    case 'KEYCART_UPDATE_SUCCESS':
+      return { ...state, keyCart: payload };
     case 'BADGE_UPDATE_SUCCESS':
       return { ...state, badgeCart: { ...payload } };
 

@@ -2,6 +2,7 @@ export type InitialStateType = {
   userProfile: any;
   carts: Cart | null;
   badgeCart: Badge;
+  keyCart: string | null;
 };
 export type Action = {
   payload: object;
@@ -28,6 +29,7 @@ export type Cart = {
   userID: string;
   carts: DetailCart[];
 };
+
 export type Badge = {
   counts: number;
 };

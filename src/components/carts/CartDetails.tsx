@@ -169,22 +169,44 @@ export default function CartDetailsPage() {
       });
   };
   const handleRemoveItem = async (e: QuantityDetailCart, index: number) => {
-    console.log(e);
-    console.log(index);
-    console.log('before: ', state.carts?.carts);
-    const newCart = { ...state.carts } as Cart;
+    const newCart: Cart = JSON.parse(JSON.stringify(state.carts));
     if (e.typeSku === 'signle') {
       newCart.carts[index].quantity[0].count = 0;
     } else {
       newCart.carts[index].quantity[1].count = 0;
     }
+    newCart.carts.map((item, index) => {
+      if (item.quantity[0].count === 0 && item.quantity[1].count === 0) {
+        newCart.carts.splice(index, 1);
+      }
+    });
+    // Update item to list carts of user
+    update(ref(database, `/carts/${state.keyCart}`), newCart);
+    //Update item to Badge Carts
+    let countItemCart = 0;
+    newCart?.carts.map((item: any) => {
+      if (item.quantity[0].count > 0) {
+        countItemCart++;
+      }
+      if (item.quantity[1].count > 0) {
+        countItemCart++;
+      }
+    });
+    dispatch({
+      type: 'CARTS_UPDATE_SUCCESS',
+      payload: newCart,
+    });
+    dispatch({
+      type: 'BADGE_UPDATE_SUCCESS',
+      payload: { counts: countItemCart },
+    });
   };
   return (
     <div className='my-8 xl:mx-64 lg:mx-52  sm:mx-8 mx-4'>
       <h1 className='text-center font-bold text-3xl'>Giỏ hàng của bạn</h1>
       {state.carts ? (
-        <div className='mt-8 flex flex-row gap-8  '>
-          <div className='grid gap-8 basis-3/5'>
+        <div className='mt-8 flex md:flex-row flex-col gap-8  '>
+          <div className='grid gap-8 md:basis-3/5'>
             {state.carts?.carts.map((item, index) => {
               return item.quantity.map((e, index2) => {
                 return (
@@ -201,7 +223,7 @@ export default function CartDetailsPage() {
                       className='aspect-square w-24 '
                     />
                     <div className='grid gap-2 w-full'>
-                      <div className='flex justify-between '>
+                      <div className='flex justify-between gap-2 items-center'>
                         <Link
                           href={`/products/${item.productID}`}
                           target='_blank'
@@ -251,7 +273,7 @@ export default function CartDetailsPage() {
               });
             })}
           </div>
-          <div className='basis-2/5  bg-gray-100 p-4 h-full '>
+          <div className='md:basis-2/5  bg-gray-100 p-4 h-full '>
             <div className='flex justify-between gap-4 items-center'>
               <span className='text-sm'>Tổng tiền</span>
               <span className='text-default-red font-semibold'>
