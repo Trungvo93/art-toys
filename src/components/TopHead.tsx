@@ -344,7 +344,8 @@ export default function TopHeadPage() {
           isOpen={isOpenPopover}
           onOpenChange={(open) => {
             setIsOpenPopover(open);
-          }}>
+          }}
+          shouldBlockScroll={true}>
           <PopoverTrigger>
             <Button
               color='default'
