@@ -49,6 +49,7 @@ export default function TopHeadPage() {
     onAuthStateChanged(auth, (account) => {
       // If user is logged in
       if (account) {
+        console.log(account);
         dispatch({ type: 'LOGIN_SUCCESS', payload: account });
 
         // Get data carts
@@ -65,11 +66,6 @@ export default function TopHeadPage() {
 
             //Convert data to Object data
             if (snapshot.exists()) {
-              // if (isArray(snapshot.val())) {
-              //   result = snapshot.val()?.filter((value: any) => value)[0];
-              // } else {
-              //   result = snapshot.val()[Object.keys(snapshot.val())[0]];
-              // }
               const dataCart = Object.values(snapshot.val())[0] as Cart;
               const keyCart = Object.keys(snapshot.val());
 
@@ -82,12 +78,6 @@ export default function TopHeadPage() {
                 type: 'KEYCART_UPDATE_SUCCESS',
                 payload: keyCart,
               });
-              // if (result) {
-              //   dispatch({
-              //     type: 'CARTS_UPDATE_SUCCESS',
-              //     payload: result,
-              //   });
-              // }
 
               // Calculate the number of products in the shopping cart
               let countItemCart = 0;
@@ -127,7 +117,6 @@ export default function TopHeadPage() {
       }
     });
   }, []);
-
   return (
     <Navbar
       isMenuOpen={isMenuOpen}
