@@ -40,10 +40,12 @@ import CartsPage from './carts/CartsPage';
 import { isArray } from '@nextui-org/shared-utils';
 import { Cart } from '../lib/DefiningTypes';
 import TotalPricePreviewPage from './carts/TotalPricePreview';
-import { usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
+
 export default function TopHeadPage() {
   const { state, dispatch } = useContext(AppContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isOpenPopover, setIsOpenPopover] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   useEffect(() => {
     onAuthStateChanged(auth, (account) => {
@@ -117,6 +119,23 @@ export default function TopHeadPage() {
       }
     });
   }, []);
+  const router = useRouter();
+  const [totalMoney, setTotalMoney] = useState<number>(0);
+  useEffect(() => {
+    let tempMoney = 0;
+    if (state.carts?.carts) {
+      state.carts?.carts.map((item) => {
+        tempMoney =
+          tempMoney +
+          item.quantity[0].count * item.quantity[0].price +
+          item.quantity[1].count * item.quantity[1].price;
+      });
+    }
+    setTotalMoney(tempMoney);
+  }, [state.carts]);
+  const handleGotoDetailsCart = () => {
+    router.push('/cart');
+  };
   return (
     <Navbar
       isMenuOpen={isMenuOpen}
@@ -320,7 +339,9 @@ export default function TopHeadPage() {
         {/* Cart */}
         <Popover
           placement='bottom'
-          showArrow={true}>
+          showArrow={true}
+          isOpen={isOpenPopover}
+          onOpenChange={(open) => setIsOpenPopover(open)}>
           <PopoverTrigger>
             <Button
               color='default'
@@ -347,7 +368,38 @@ export default function TopHeadPage() {
                   <Divider className='my-4' />
                   <CartsPage />
                   <Divider className='my-4' />
-                  <TotalPricePreviewPage />
+                  {/* <TotalPricePreviewPage /> */}
+                  {/* Show Total Money and Action */}
+                  <div className={` grid gap-4`}>
+                    <div className='flex justify-between text-default-red gap-2 text-small font-bold'>
+                      <span>Thành tiền:</span>
+                      <span className={``}>
+                        {totalMoney
+                          .toString()
+                          .replace(/[^-\d.]/g, '')
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                        đ
+                      </span>
+                    </div>
+                    <div className='grid grid-cols-2 gap-4 '>
+                      <Button
+                        variant='solid'
+                        color='danger'
+                        radius='none'
+                        onClick={() => {
+                          handleGotoDetailsCart();
+                          setIsMenuOpen(false);
+                        }}>
+                        Chi tiết giỏ hàng
+                      </Button>
+                      <Button
+                        variant='ghost'
+                        color='danger'
+                        radius='none'>
+                        Thanh toán
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
