@@ -19,7 +19,7 @@ import {
   AccordionItem,
   Divider,
 } from '@nextui-org/react';
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useRef } from 'react';
 import Link from 'next/link';
 import LoginWithEmailPage from './user/LoginWithEmail';
 import { auth, database } from '../../firebase/firebaseConfig';
@@ -136,6 +136,7 @@ export default function TopHeadPage() {
   const handleGotoDetailsCart = () => {
     router.push('/cart');
   };
+
   return (
     <Navbar
       isMenuOpen={isMenuOpen}
@@ -341,7 +342,9 @@ export default function TopHeadPage() {
           placement='bottom'
           showArrow={true}
           isOpen={isOpenPopover}
-          onOpenChange={(open) => setIsOpenPopover(open)}>
+          onOpenChange={(open) => {
+            setIsOpenPopover(open);
+          }}>
           <PopoverTrigger>
             <Button
               color='default'
