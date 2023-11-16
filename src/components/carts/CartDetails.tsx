@@ -294,7 +294,10 @@ export default function CartDetailsPage() {
             <Button
               color='danger'
               className='my-4 w-full'
-              radius='none'>
+              radius='none'
+              onClick={() => {
+                router.push('/checkout');
+              }}>
               Thanh toán
             </Button>
           </div>

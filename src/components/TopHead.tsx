@@ -51,7 +51,6 @@ export default function TopHeadPage() {
     onAuthStateChanged(auth, (account) => {
       // If user is logged in
       if (account) {
-        console.log(account);
         dispatch({ type: 'LOGIN_SUCCESS', payload: account });
 
         // Get data carts
@@ -399,7 +398,10 @@ export default function TopHeadPage() {
                       <Button
                         variant='ghost'
                         color='danger'
-                        radius='none'>
+                        radius='none'
+                        onClick={() => {
+                          router.push('/checkout');
+                        }}>
                         Thanh toán
                       </Button>
                     </div>
