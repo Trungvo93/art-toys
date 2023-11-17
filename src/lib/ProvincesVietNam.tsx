@@ -2,7 +2,7 @@
 import axios from 'axios';
 import useSWR from 'swr';
 import { Select, SelectItem } from '@nextui-org/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 const fetcherCity = (url: string) => fetch(url).then((r) => r.json());
 
 export default function ProvincesVietNamPage() {
@@ -10,48 +10,64 @@ export default function ProvincesVietNamPage() {
     process.env.NEXT_PUBLIC_PROVINCES_VIETNAM,
     fetcherCity
   );
-  const [indexCity, setIndexCity] = useState('');
-  const [indexDistrict, setIndexDistrict] = useState('');
-  const [indexWard, setIndexWard] = useState('');
+  const [selectedCity, setSelectedCity] = useState('chon_tinh_thanh_pho');
+  const [selectedDistrict, setSelectedDistrict] = useState('chon_quan_huyen');
+  const [selectedWard, setSelectedWard] = useState('chon_phuong_xa');
 
   const handleSelectionChangeCity = (
     e: React.ChangeEvent<HTMLSelectElement>
   ) => {
-    setIndexWard('');
-    setIndexDistrict('');
-    setIndexCity(e.target.value);
+    if (e.target.value === '') {
+      setSelectedCity('chon_tinh_thanh_pho');
+    } else {
+      setSelectedCity(e.target.value);
+    }
+    setSelectedDistrict('chon_quan_huyen');
+    setSelectedWard('chon_phuong_xa');
   };
   const handleSelectionChangeDistrict = (
     e: React.ChangeEvent<HTMLSelectElement>
   ) => {
-    setIndexDistrict(e.target.value);
-    setIndexWard('');
+    if (e.target.value === '') {
+      setSelectedDistrict('chon_quan_huyen');
+    } else {
+      setSelectedDistrict(e.target.value);
+    }
+    setSelectedWard('chon_phuong_xa');
   };
   const handleSelectionChangeWard = (
     e: React.ChangeEvent<HTMLSelectElement>
   ) => {
-    setIndexWard(e.target.value);
+    if (e.target.value === '') {
+      setSelectedWard('chon_phuong_xa');
+    } else {
+      setSelectedWard(e.target.value);
+    }
   };
-  console.log(indexCity.length > 0 && data[indexCity]);
-  console.log(
-    indexDistrict.length > 0 && data[indexCity].districts[indexDistrict]
-  );
 
+  console.log(data);
   return (
     <div className='flex w-full max-w-xs flex-col gap-2'>
       <Select
         label='Tỉnh/ Thành phố'
         variant='bordered'
         placeholder='Chọn Tỉnh/ Thành phố'
-        className='max-w-xs'
-        selectedKeys={indexCity}
+        selectedKeys={[selectedCity]}
+        className='w-[400px]'
         radius='none'
-        onChange={handleSelectionChangeCity}>
+        onChange={(e) => {
+          handleSelectionChangeCity(e);
+        }}>
+        <SelectItem
+          key={'chon_tinh_thanh_pho'}
+          value={'chon_tinh_thanh_pho'}>
+          Chọn Tỉnh/ Thành phố
+        </SelectItem>
         {data &&
           data.map((item: any, index: number) => (
             <SelectItem
               key={index}
-              value={item.codename}>
+              value={item.name}>
               {item.name}
             </SelectItem>
           ))}
@@ -63,13 +79,18 @@ export default function ProvincesVietNamPage() {
         placeholder='Chọn Quận/ Huyện'
         className='max-w-xs'
         radius='none'
-        selectedKeys={indexDistrict}
+        selectedKeys={[selectedDistrict]}
         onChange={handleSelectionChangeDistrict}>
-        {indexCity.length > 0 &&
-          data[indexCity]['districts'].map((item: any, index: number) => (
+        <SelectItem
+          key={'chon_quan_huyen'}
+          value={'chon_quan_huyen'}>
+          Chọn Quận/ Huyện
+        </SelectItem>
+        {selectedCity !== 'chon_tinh_thanh_pho' &&
+          data[selectedCity]['districts'].map((item: any, index: number) => (
             <SelectItem
               key={index}
-              value={item.codename}>
+              value={item.name}>
               {item.name}
             </SelectItem>
           ))}
@@ -81,32 +102,40 @@ export default function ProvincesVietNamPage() {
         placeholder='Chọn Phường/ Xã'
         className='max-w-xs'
         radius='none'
-        selectedKeys={indexWard}
+        selectedKeys={[selectedWard]}
         onChange={handleSelectionChangeWard}>
-        {indexDistrict.length > 0 &&
-          data[indexCity]['districts'][indexDistrict]['wards'].map(
+        <SelectItem
+          key={'chon_phuong_xa'}
+          value={'chon_phuong_xa'}>
+          Chọn Phường/ Xã
+        </SelectItem>
+        {selectedDistrict !== 'chon_quan_huyen' &&
+          data[selectedCity]['districts'][selectedDistrict]['wards'].map(
             (item: any, index: number) => (
               <SelectItem
                 key={index}
-                value={item.codename}>
+                value={item.name}>
                 {item.name}
               </SelectItem>
             )
           )}
       </Select>
       <p className='text-small text-default-500'>
-        Tỉnh/ Thành phố: {indexCity.length > 0 && data[indexCity]['name']}
+        Tỉnh/ Thành phố:{' '}
+        {selectedCity !== 'chon_tinh_thanh_pho' && data[selectedCity]['name']}
       </p>
       <p className='text-small text-default-500'>
         Quận/ Huyện:
-        {indexDistrict.length > 0 &&
-          data[indexCity].districts[indexDistrict]['name']}
+        {selectedDistrict !== 'chon_quan_huyen' &&
+          data[selectedCity].districts[selectedDistrict]['name']}
       </p>
 
       <p className='text-small text-default-500'>
         Phường/ Xã:
-        {indexWard.length > 0 &&
-          data[indexCity].districts[indexDistrict].wards[indexWard]['name']}
+        {selectedWard !== 'chon_phuong_xa' &&
+          data[selectedCity].districts[selectedDistrict].wards[selectedWard][
+            'name'
+          ]}
       </p>
     </div>
   );

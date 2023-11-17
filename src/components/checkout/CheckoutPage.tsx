@@ -107,7 +107,9 @@ export default function CheckoutPage() {
                 radius='none'
                 className='w-full'
               />
-              <ProvincesVietNamPage />
+              <div className='w-full'>
+                <ProvincesVietNamPage />
+              </div>
             </form>
           </div>
 
