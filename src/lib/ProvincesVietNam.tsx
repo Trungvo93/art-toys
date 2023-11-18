@@ -7,7 +7,7 @@ const fetcherCity = (url: string) => axios.get(url).then((r) => r.data);
 
 export default function ProvincesVietNamPage() {
   const { data, error } = useSWR(
-    `${process.env.NEXT_PUBLIC_API_PROVINCES_VIETNAM}?depth=3`,
+    `https://provinces.open-api.vn/api/?depth=3`,
     fetcherCity
   );
   const [selectedCity, setSelectedCity] = useState('chon_tinh_thanh_pho');
