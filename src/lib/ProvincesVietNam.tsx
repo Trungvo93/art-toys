@@ -3,35 +3,17 @@ import axios from 'axios';
 import useSWR from 'swr';
 import { Select, SelectItem } from '@nextui-org/react';
 import { useEffect, useState } from 'react';
-// const fetcherCity = (url: string) => axios.get(url).then((r) => r.data);
+const fetcherCity = (url: string) => axios.get(url).then((r) => r.data);
 
 export default function ProvincesVietNamPage() {
-  // const { data, error } = useSWR(
-  //   process.env.NEXT_PUBLIC_PROVINCES_VIETNAM,
-  //   fetcherCity
-  // );
+  const { data, error } = useSWR(
+    `${process.env.NEXT_PUBLIC_API_PROVINCES_VIETNAM}?depth=3`,
+    fetcherCity
+  );
   const [selectedCity, setSelectedCity] = useState('chon_tinh_thanh_pho');
   const [selectedDistrict, setSelectedDistrict] = useState('chon_quan_huyen');
   const [selectedWard, setSelectedWard] = useState('chon_phuong_xa');
-  const [data, setData] = useState<any>(undefined);
-  useEffect(() => {
-    const fetcherCity = async () => {
-      try {
-        const res = await axios({
-          method: 'get',
-          url: process.env.API_PROVINCES_VIETNAM,
-          headers: {
-            'Content-type': 'application/json',
-          },
-        });
 
-        setData(res.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    fetcherCity();
-  }, []);
   const handleSelectionChangeCity = (
     e: React.ChangeEvent<HTMLSelectElement>
   ) => {
