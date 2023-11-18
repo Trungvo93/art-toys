@@ -19,11 +19,12 @@ export default function ProvincesVietNamPage() {
       try {
         const res = await axios({
           method: 'get',
-          url: 'https://provinces.open-api.vn/api/?depth=3',
+          url: process.env.API_PROVINCES_VIETNAM,
           headers: {
             'Content-type': 'application/json',
           },
         });
+
         setData(res.data);
       } catch (err) {
         console.log(err);
