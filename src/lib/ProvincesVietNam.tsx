@@ -19,7 +19,7 @@ export default function ProvincesVietNamPage() {
       try {
         const res = await axios({
           method: 'get',
-          url: process.env.NEXT_PUBLIC_PROVINCES_VIETNAM,
+          url: 'https://provinces.open-api.vn/api/?depth=3',
           headers: {
             'Content-type': 'application/json',
           },
