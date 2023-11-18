@@ -20,6 +20,9 @@ export default function ProvincesVietNamPage() {
         const res = await axios({
           method: 'get',
           url: process.env.NEXT_PUBLIC_PROVINCES_VIETNAM,
+          headers: {
+            'Content-type': 'application/json',
+          },
         });
         setData(res.data);
       } catch (err) {
