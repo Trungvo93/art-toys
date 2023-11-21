@@ -45,15 +45,14 @@ export default function ProvincesVietNamPage() {
     }
   };
 
-  console.log(data);
   return (
-    <div className='flex w-full max-w-xs flex-col gap-2'>
+    <div className='grid w-full   gap-2'>
       <Select
         label='Tỉnh/ Thành phố'
         variant='bordered'
         placeholder='Chọn Tỉnh/ Thành phố'
         selectedKeys={[selectedCity]}
-        className='w-[400px]'
+        className='w-full'
         radius='none'
         onChange={(e) => {
           handleSelectionChangeCity(e);
@@ -77,7 +76,7 @@ export default function ProvincesVietNamPage() {
         label='Quận/ Huyện'
         variant='bordered'
         placeholder='Chọn Quận/ Huyện'
-        className='max-w-xs'
+        className='w-full'
         radius='none'
         selectedKeys={[selectedDistrict]}
         onChange={handleSelectionChangeDistrict}>
@@ -100,7 +99,7 @@ export default function ProvincesVietNamPage() {
         label='Phường/ Xã'
         variant='bordered'
         placeholder='Chọn Phường/ Xã'
-        className='max-w-xs'
+        className='w-full'
         radius='none'
         selectedKeys={[selectedWard]}
         onChange={handleSelectionChangeWard}>
