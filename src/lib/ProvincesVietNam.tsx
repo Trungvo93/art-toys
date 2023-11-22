@@ -36,20 +36,20 @@ export default function ProvincesVietNamPage(props: any) {
   ) => {
     if (e.target.value === '') {
       setSelectedCity('chon_tinh_thanh_pho');
-      props.addressCallback({
-        city: '',
-        districts: '',
-        wards: '',
-        street: street,
-      });
+      // props.addressCallback({
+      //   city: '',
+      //   districts: '',
+      //   wards: '',
+      //   street: street,
+      // });
     } else {
       setSelectedCity(e.target.value);
-      props.addressCallback({
-        city: data[e.target.value]['name'],
-        districts: '',
-        wards: '',
-        street: street,
-      });
+      // props.addressCallback({
+      //   city: data[e.target.value]['name'],
+      //   districts: '',
+      //   wards: '',
+      //   street: street,
+      // });
     }
     setSelectedDistrict('chon_quan_huyen');
     setSelectedWard('chon_phuong_xa');
@@ -59,20 +59,20 @@ export default function ProvincesVietNamPage(props: any) {
   ) => {
     if (e.target.value === '') {
       setSelectedDistrict('chon_quan_huyen');
-      props.addressCallback({
-        city: props.addressData.city,
-        districts: '',
-        wards: '',
-        street: street,
-      });
+      // props.addressCallback({
+      //   city: props.addressData.city,
+      //   districts: '',
+      //   wards: '',
+      //   street: street,
+      // });
     } else {
       setSelectedDistrict(e.target.value);
-      props.addressCallback({
-        city: props.addressData.city,
-        districts: data[selectedCity].districts[e.target.value]['name'],
-        wards: '',
-        street: street,
-      });
+      // props.addressCallback({
+      //   city: props.addressData.city,
+      //   districts: data[selectedCity].districts[e.target.value]['name'],
+      //   wards: '',
+      //   street: street,
+      // });
     }
     setSelectedWard('chon_phuong_xa');
   };
@@ -81,23 +81,23 @@ export default function ProvincesVietNamPage(props: any) {
   ) => {
     if (e.target.value === '') {
       setSelectedWard('chon_phuong_xa');
-      props.addressCallback({
-        city: props.addressData.city,
-        districts: props.addressData.districts,
-        wards: '',
-        street: street,
-      });
+      // props.addressCallback({
+      //   city: props.addressData.city,
+      //   districts: props.addressData.districts,
+      //   wards: '',
+      //   street: street,
+      // });
     } else {
       setSelectedWard(e.target.value);
-      props.addressCallback({
-        city: props.addressData.city,
-        districts: props.addressData.districts,
-        wards:
-          data[selectedCity].districts[selectedDistrict].wards[e.target.value][
-            'name'
-          ],
-        street: street,
-      });
+      // props.addressCallback({
+      //   city: props.addressData.city,
+      //   districts: props.addressData.districts,
+      //   wards:
+      //     data[selectedCity].districts[selectedDistrict].wards[e.target.value][
+      //       'name'
+      //     ],
+      //   street: street,
+      // });
     }
   };
 
