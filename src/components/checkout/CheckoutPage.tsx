@@ -121,13 +121,13 @@ export default function CheckoutPage() {
                 <AccordionItem
                   key='1'
                   aria-label='Hiển thị thông tin sản phẩm'
+                  startContent={
+                    <i className='bi bi-bag-heart text-cyan-600  font-semibold'></i>
+                  }
                   title={
-                    <div className='flex gap-2 font-semibold'>
-                      <i className='bi bi-bag-heart text-cyan-600 '></i>
-                      <span className='text-cyan-600 '>
-                        Hiển thị thông tin sản phẩm
-                      </span>
-                    </div>
+                    <span className='text-cyan-600  font-semibold '>
+                      Hiển thị thông tin sản phẩm
+                    </span>
                   }
                   className=''>
                   <div className='grid gap-4'>
