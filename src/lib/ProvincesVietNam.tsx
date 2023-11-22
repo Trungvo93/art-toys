@@ -8,7 +8,7 @@ const fetcherCity = (url: string) => axios.get(url).then((r) => r.data);
 
 export default function ProvincesVietNamPage(props: any) {
   const { data, error } = useSWR(
-    `https://citys.open-api.vn/api/?depth=3`,
+    `https://provinces.open-api.vn/api/?depth=3`,
     fetcherCity
   );
 
