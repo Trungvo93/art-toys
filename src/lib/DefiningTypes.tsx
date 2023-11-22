@@ -66,3 +66,10 @@ export type AvatarType = {
   previewBlob: string;
   fileAvatar: Blob;
 };
+
+export type Province = {
+  city: string;
+  districts: string;
+  wards: string;
+  street: string;
+};

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Input, Accordion, AccordionItem } from '@nextui-org/react';
 import Image from 'next/image';
 import ProvincesVietNamPage from '@/lib/ProvincesVietNam';
+import { Province } from '@/lib/DefiningTypes';
 export default function CheckoutPage() {
   const router = useRouter();
   const { state, dispatch } = useContext(AppContext);
@@ -12,11 +13,18 @@ export default function CheckoutPage() {
   const [firstLoad, setFirstLoad] = useState(false);
   const [fullName, setFullName] = useState<string>('');
   const [phoneNumber, setPhoneNumber] = useState<string>('');
+  const [address, setAddress] = useState<Province>({
+    city: '',
+    districts: '',
+    wards: '',
+    street: '',
+  });
   const [email, setEmail] = useState<string>('');
   const [isInvalidFullName, setIsInvalidFullName] = useState(false);
   const [isInvalidPhoneNumber, setIsInvalidPhoneNumber] = useState(false);
   const [isInvalidEmail, setIsInvalidEmail] = useState(false);
   const [errorMessageEmail, setErrorMessageEmail] = useState('');
+
   useEffect(() => {
     setIgnoreFistCheck(true);
     setTimeout(() => {
@@ -58,6 +66,10 @@ export default function CheckoutPage() {
       setErrorMessageEmail('Email không đúng định dạng');
     }
   }, [email]);
+
+  const addressCallback = (childData: Province) => {
+    setAddress(JSON.parse(JSON.stringify(childData)));
+  };
   return (
     <div className='my-8 xl:mx-64 lg:mx-52  sm:mx-8 mx-4'>
       <h1 className='text-center font-bold text-3xl mb-8'>
@@ -108,13 +120,20 @@ export default function CheckoutPage() {
                 className='w-full'
               />
               <div className='w-full'>
-                <ProvincesVietNamPage />
+                <ProvincesVietNamPage
+                  addressCallback={addressCallback}
+                  addressData={address}
+                />
               </div>
+
+              <p>
+                Địa chỉ cụ thể: {address.city}, {address.districts},{' '}
+                {address.wards}, {address.street}
+              </p>
             </form>
           </div>
 
           {/* Right Side */}
-
           <div className='order-first md:order-last '>
             <div className='md:hidden block'>
               <Accordion>

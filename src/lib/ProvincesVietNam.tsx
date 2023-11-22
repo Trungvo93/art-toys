@@ -1,26 +1,55 @@
 'use client';
 import axios from 'axios';
 import useSWR from 'swr';
-import { Select, SelectItem } from '@nextui-org/react';
+import { Button, Input, Select, SelectItem } from '@nextui-org/react';
 import { useEffect, useState } from 'react';
+import { Province } from './DefiningTypes';
 const fetcherCity = (url: string) => axios.get(url).then((r) => r.data);
 
-export default function ProvincesVietNamPage() {
+export default function ProvincesVietNamPage(props: any) {
   const { data, error } = useSWR(
-    `https://provinces.open-api.vn/api/?depth=3`,
+    `https://citys.open-api.vn/api/?depth=3`,
     fetcherCity
   );
+
   const [selectedCity, setSelectedCity] = useState('chon_tinh_thanh_pho');
   const [selectedDistrict, setSelectedDistrict] = useState('chon_quan_huyen');
   const [selectedWard, setSelectedWard] = useState('chon_phuong_xa');
 
+  const [street, setStreet] = useState('');
+  const [isInvalidStreet, setIsInvalidStreet] = useState(false);
+  const [ignoreFistCheck, setIgnoreFistCheck] = useState(false);
+
+  useEffect(() => {
+    setIgnoreFistCheck(true);
+  }, []);
+  useEffect(() => {
+    props.addressCallback({
+      city: props.addressData.city,
+      districts: props.addressData.districts,
+      wards: props.addressData.wards,
+      street: street,
+    });
+  }, [street]);
   const handleSelectionChangeCity = (
     e: React.ChangeEvent<HTMLSelectElement>
   ) => {
     if (e.target.value === '') {
       setSelectedCity('chon_tinh_thanh_pho');
+      props.addressCallback({
+        city: '',
+        districts: '',
+        wards: '',
+        street: street,
+      });
     } else {
       setSelectedCity(e.target.value);
+      props.addressCallback({
+        city: data[e.target.value]['name'],
+        districts: '',
+        wards: '',
+        street: street,
+      });
     }
     setSelectedDistrict('chon_quan_huyen');
     setSelectedWard('chon_phuong_xa');
@@ -30,8 +59,20 @@ export default function ProvincesVietNamPage() {
   ) => {
     if (e.target.value === '') {
       setSelectedDistrict('chon_quan_huyen');
+      props.addressCallback({
+        city: props.addressData.city,
+        districts: '',
+        wards: '',
+        street: street,
+      });
     } else {
       setSelectedDistrict(e.target.value);
+      props.addressCallback({
+        city: props.addressData.city,
+        districts: data[selectedCity].districts[e.target.value]['name'],
+        wards: '',
+        street: street,
+      });
     }
     setSelectedWard('chon_phuong_xa');
   };
@@ -40,13 +81,42 @@ export default function ProvincesVietNamPage() {
   ) => {
     if (e.target.value === '') {
       setSelectedWard('chon_phuong_xa');
+      props.addressCallback({
+        city: props.addressData.city,
+        districts: props.addressData.districts,
+        wards: '',
+        street: street,
+      });
     } else {
       setSelectedWard(e.target.value);
+      props.addressCallback({
+        city: props.addressData.city,
+        districts: props.addressData.districts,
+        wards:
+          data[selectedCity].districts[selectedDistrict].wards[e.target.value][
+            'name'
+          ],
+        street: street,
+      });
     }
   };
 
+  console.log(props.addressData);
+  console.log('selectedCity: ', selectedCity);
   return (
-    <div className='grid w-full   gap-2'>
+    <div className='grid w-full   gap-4'>
+      <Input
+        value={street}
+        onValueChange={setStreet}
+        isInvalid={isInvalidStreet}
+        errorMessage={isInvalidStreet && 'Địa chỉ không được để trống'}
+        radius='none'
+        color={isInvalidStreet ? 'danger' : 'default'}
+        label='Địa chỉ'
+        type='text'
+        className='w-full'
+      />
+
       <Select
         label='Tỉnh/ Thành phố'
         variant='bordered'
@@ -119,23 +189,6 @@ export default function ProvincesVietNamPage() {
             )
           )}
       </Select>
-      <p className='text-small text-default-500'>
-        Tỉnh/ Thành phố:{' '}
-        {selectedCity !== 'chon_tinh_thanh_pho' && data[selectedCity]['name']}
-      </p>
-      <p className='text-small text-default-500'>
-        Quận/ Huyện:
-        {selectedDistrict !== 'chon_quan_huyen' &&
-          data[selectedCity].districts[selectedDistrict]['name']}
-      </p>
-
-      <p className='text-small text-default-500'>
-        Phường/ Xã:
-        {selectedWard !== 'chon_phuong_xa' &&
-          data[selectedCity].districts[selectedDistrict].wards[selectedWard][
-            'name'
-          ]}
-      </p>
     </div>
   );
 }
