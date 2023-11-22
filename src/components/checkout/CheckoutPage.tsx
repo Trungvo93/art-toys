@@ -2,7 +2,7 @@
 import { AppContext } from '@/context/contextConfig';
 import { useContext, useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { Input } from '@nextui-org/react';
+import { Input, Accordion, AccordionItem } from '@nextui-org/react';
 import Image from 'next/image';
 import ProvincesVietNamPage from '@/lib/ProvincesVietNam';
 export default function CheckoutPage() {
@@ -114,42 +114,100 @@ export default function CheckoutPage() {
           </div>
 
           {/* Right Side */}
-          <div className='grid gap-4 px-4 border-l-2'>
-            {state.carts?.carts.map((item, index) => {
-              return item.quantity.map((e, index2) => {
-                return (
-                  <div
-                    key={index2}
-                    className={`flex gap-4 items-center  ${
-                      e.count <= 0 ? 'hidden' : 'block'
-                    }`}>
-                    <Image
-                      src={item.thumbnail}
-                      alt={item.title}
-                      width={1000}
-                      height={1000}
-                      className='aspect-square w-16 '
-                    />
-                    <div className='grid gap-2 w-full'>
-                      <p className='text-sm'>{item.title} </p>
 
-                      <p className='text-default-red text-sm'>
-                        {e.typeSku === 'signle' ? 'Hộp' : 'Set'} x {e.count}
-                      </p>
+          <div className='order-first md:order-last '>
+            <div className='md:hidden block'>
+              <Accordion>
+                <AccordionItem
+                  key='1'
+                  aria-label='Hiển thị thông tin sản phẩm'
+                  title={
+                    <div className='flex gap-2 font-semibold'>
+                      <i className='bi bi-bag-heart text-cyan-600 '></i>
+                      <span className='text-cyan-600 '>
+                        Hiển thị thông tin sản phẩm
+                      </span>
                     </div>
-                    <div>
-                      <p className='text-sm'>
-                        {(e.count * e.price)
-                          .toString()
-                          .replace(/[^-\d.]/g, '')
-                          .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                        đ
-                      </p>
-                    </div>
+                  }
+                  className=''>
+                  <div className='grid gap-4'>
+                    {state.carts?.carts.map((item, index) => {
+                      return item.quantity.map((e, index2) => {
+                        return (
+                          <div
+                            key={index2}
+                            className={`flex gap-4 items-center  ${
+                              e.count <= 0 ? 'hidden' : 'block'
+                            }`}>
+                            <Image
+                              src={item.thumbnail}
+                              alt={item.title}
+                              width={1000}
+                              height={1000}
+                              className='aspect-square w-16 '
+                            />
+                            <div className='grid gap-2 w-full'>
+                              <p className='text-sm'>{item.title} </p>
+
+                              <p className='text-default-red text-sm'>
+                                {e.typeSku === 'signle' ? 'Hộp' : 'Set'} x{' '}
+                                {e.count}
+                              </p>
+                            </div>
+                            <div>
+                              <p className='text-sm'>
+                                {(e.count * e.price)
+                                  .toString()
+                                  .replace(/[^-\d.]/g, '')
+                                  .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                                đ
+                              </p>
+                            </div>
+                          </div>
+                        );
+                      });
+                    })}
                   </div>
-                );
-              });
-            })}
+                </AccordionItem>
+              </Accordion>
+            </div>
+            <div className=' gap-4 md:px-4  md:border-l-2 md:grid hidden'>
+              {state.carts?.carts.map((item, index) => {
+                return item.quantity.map((e, index2) => {
+                  return (
+                    <div
+                      key={index2}
+                      className={`flex gap-4 items-center  ${
+                        e.count <= 0 ? 'hidden' : 'block'
+                      }`}>
+                      <Image
+                        src={item.thumbnail}
+                        alt={item.title}
+                        width={1000}
+                        height={1000}
+                        className='aspect-square w-16 '
+                      />
+                      <div className='grid gap-2 w-full'>
+                        <p className='text-sm'>{item.title} </p>
+
+                        <p className='text-default-red text-sm'>
+                          {e.typeSku === 'signle' ? 'Hộp' : 'Set'} x {e.count}
+                        </p>
+                      </div>
+                      <div>
+                        <p className='text-sm'>
+                          {(e.count * e.price)
+                            .toString()
+                            .replace(/[^-\d.]/g, '')
+                            .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                          đ
+                        </p>
+                      </div>
+                    </div>
+                  );
+                });
+              })}
+            </div>
           </div>
         </div>
       ) : (
